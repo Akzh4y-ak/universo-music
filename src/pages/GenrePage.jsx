@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import TrackGrid from '../components/shared/TrackGrid';
 import { getGenreById, genres } from '../data/genres';
 import { useMusic } from '../context/music';
@@ -107,7 +106,6 @@ const GenrePage = () => {
         <meta name="description" content={`Explore top tracks and hits in the ${genre.title} genre. Free streaming on Univerzo.`} />
       </Helmet>
 
-      <ProviderNotice />
 
       <div className={`relative flex h-72 items-end overflow-hidden rounded-[28px] bg-gradient-to-br ${genre.gradient} p-8 shadow-lg`}>
          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />

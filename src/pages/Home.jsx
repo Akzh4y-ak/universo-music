@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
 import { getTrendingTracks, searchTracks } from '../services/api';
 import PlaylistCard from '../components/shared/PlaylistCard';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
@@ -178,7 +177,6 @@ const Home = () => {
         </div>
       </section>
 
-      <ProviderNotice />
 
       {error ? (
         <CatalogFeedback

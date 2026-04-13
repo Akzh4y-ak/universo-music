@@ -3,7 +3,6 @@ import { Flame, Globe2, Radar } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -168,7 +167,6 @@ const TrendingPage = () => {
         </div>
       </section>
 
-      <ProviderNotice />
 
       {error ? (
         <CatalogFeedback

@@ -3,7 +3,6 @@ import { Disc3, ListMusic, Mic2, Play, Search } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
@@ -138,7 +137,6 @@ const SearchPage = () => {
         <meta name="description" content="Search for your favorite tracks, artists, and playlists globally on Univerzo." />
       </Helmet>
 
-      <ProviderNotice />
 
       <div className="sticky top-0 z-30 pt-4 pb-4 bg-bg-base/90 backdrop-blur-md">
         <div className="relative max-w-md w-full">
@@ -241,7 +239,6 @@ const SearchPage = () => {
                           {topResult.album ? ` • ${topResult.album}` : ''}
                         </p>
                         <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.24em] text-text-subdued">
-                          <span>{topResult.providerLabel}</span>
                           <span>{topResult.durationLabel}</span>
                           {topResult.isExplicit ? <span>Explicit</span> : null}
                         </div>

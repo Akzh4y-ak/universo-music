@@ -3,7 +3,6 @@ import { Disc3, Play } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useParams } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -125,7 +124,6 @@ const ArtistPage = () => {
         <title>{artistName} - Univerzo Music</title>
       </Helmet>
 
-      <ProviderNotice />
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,215,96,0.2),transparent_38%)]" />
@@ -143,9 +141,7 @@ const ArtistPage = () => {
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-brand">Artist</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{artistName}</h1>
-            <p className="max-w-2xl text-sm leading-7 text-text-muted md:text-base">
-              Live catalog tracks and quick-play discovery for this artist across the current provider.
-            </p>
+              Live catalog tracks and quick-play discovery for this artist.
             <div className="flex items-center gap-4">
               <button
                 type="button"

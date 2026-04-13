@@ -3,7 +3,7 @@ export const genres = [
     id: 'hindi',
     title: 'Hindi Hits',
     subtitle: 'Bollywood leaders, romance cuts, and chart staples.',
-    description: 'A broad Hindi lane tuned for mainstream JioSaavn discovery and replay-friendly queues.',
+    description: 'A broad Hindi lane tuned for mainstream discovery and replay-friendly queues.',
     query: 'latest hindi songs bollywood hits',
     color: 'bg-orange-500',
     gradient: 'from-orange-500 via-rose-500 to-pink-500',

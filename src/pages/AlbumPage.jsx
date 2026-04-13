@@ -3,7 +3,6 @@ import { Disc3, Play } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useParams } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -134,7 +133,6 @@ const AlbumPage = () => {
         <title>{albumName || 'Collection'} - Univerzo Music</title>
       </Helmet>
 
-      <ProviderNotice />
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(30,215,96,0.16),transparent_40%)]" />
@@ -153,7 +151,7 @@ const AlbumPage = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-brand">Collection</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{albumName || 'Untitled Collection'}</h1>
             <p className="max-w-2xl text-sm leading-7 text-text-muted md:text-base">
-              {artistName ? `${artistName} and related tracks from the current provider.` : 'Related tracks from the current provider.'}
+              {artistName ? `${artistName} and related tracks.` : 'Related tracks.'}
             </p>
             <div className="flex items-center gap-4">
               <button
@@ -182,7 +180,7 @@ const AlbumPage = () => {
         {!albumName ? (
           <CatalogFeedback
             title="No collection metadata"
-            message="This provider did not expose an album or collection name for the selected track."
+            message="This catalog did not expose an album or collection name for the selected track."
             actionLabel="Go back home"
             actionTo="/"
           />

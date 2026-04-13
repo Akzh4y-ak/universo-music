@@ -187,9 +187,7 @@ const NowPlayingPage = () => {
                     {currentTrack.album}
                   </Link>
                 ) : null}
-                <span className="rounded-full border border-white/8 bg-white/6 px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-text-subdued">
-                  {currentTrack.providerLabel}
-                </span>
+
               </div>
               <p className="max-w-2xl text-sm leading-7 text-text-muted">
                 {providerStatus.message}

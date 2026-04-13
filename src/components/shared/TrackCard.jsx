@@ -19,7 +19,6 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
   const albumSlug = getTrackAlbumSlug(track);
   const showArtistLink = Boolean(track.artist && artistSlug);
   const showAlbumLink = Boolean(track.album && albumSlug);
-  const metaPills = [track.providerLabel, track.durationLabel].filter(Boolean);
 
   const handlePlay = () => {
     if (isCurrentTrack) {

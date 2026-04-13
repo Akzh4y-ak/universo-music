@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { searchTracks } from '../services/api';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import ProviderNotice from '../components/shared/ProviderNotice';
 import { usePlayer } from '../context/player';
 import { useMusic } from '../context/music';
 import { Play, Trash2 } from 'lucide-react';
@@ -133,7 +132,6 @@ const PlaylistPage = () => {
         <meta name="description" content={`Listen to the ${title} playlist on Univerzo. Discover and stream top songs right now.`} />
       </Helmet>
 
-      <ProviderNotice />
 
       <div className="flex flex-col items-end gap-6 border-b border-white/10 pt-10 pb-6 md:flex-row">
         <div className="flex h-52 w-52 items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-indigo-500 to-purple-800 text-6xl font-black shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
@@ -169,7 +167,7 @@ const PlaylistPage = () => {
           <Play className="w-6 h-6 fill-black text-black ml-1" />
         </button>
         <div className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.24em] text-text-subdued">
-          {savedPlaylist ? 'Saved in your library' : 'Dynamic results from provider search'}
+          {savedPlaylist ? 'Saved in your library' : 'Dynamic search results'}
         </div>
       </div>
 

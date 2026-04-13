@@ -121,9 +121,7 @@ const QueuePanel = () => {
                       </div>
 
                       <div className="flex flex-col items-end gap-2">
-                        <span className="text-[10px] uppercase tracking-[0.24em] text-text-subdued">
-                          {track.providerLabel}
-                        </span>
+
                         <div className="flex items-center gap-2">
                           {isActive ? (
                             <span className="rounded-full bg-brand px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-black">

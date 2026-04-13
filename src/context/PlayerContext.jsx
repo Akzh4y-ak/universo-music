@@ -223,7 +223,7 @@ export const PlayerProvider = ({ children }) => {
       await loadTrackUrl(track.url);
       setProviderStatus((previous) => ({
         ...previous,
-        message: `Streaming track audio from ${track.providerLabel}.`,
+        message: 'Streaming track audio.',
       }));
       return;
     }
@@ -231,7 +231,7 @@ export const PlayerProvider = ({ children }) => {
     setIsPlaying(false);
     setProviderStatus((previous) => ({
       ...previous,
-      message: 'This track is missing a playable source in the current provider setup.',
+      message: 'This track is missing a playable source.',
     }));
   }, [loadTrackUrl]);
 
@@ -268,7 +268,7 @@ export const PlayerProvider = ({ children }) => {
 
       setProviderStatus((previous) => ({
         ...previous,
-        message: `Autoplay radio found ${results.length} related tracks from ${seedTrack.providerLabel}.`,
+        message: `Autoplay radio found ${results.length} related tracks.`,
       }));
 
       await playTrack(results[0], nextQueue, nextIndex);

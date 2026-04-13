@@ -12,7 +12,7 @@ export function getMusicProviderInfo() {
     supportsFullPlayback: true,
     requiresUserLogin: false,
     isUsingPublicCatalog: true,
-    label: 'JioSaavn',
-    summary: 'Full tracks are streaming from JioSaavn with no listener login required. This is the active no-login catalog path for the app.',
+    label: 'Univerzo Catalog',
+    summary: 'Full tracks are streaming from our secure catalog with no login required.',
   };
 }

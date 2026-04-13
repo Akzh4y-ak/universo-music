@@ -75,20 +75,9 @@ const BottomPlayer = () => {
             />
           </Link>
           <div className="min-w-0 flex-1">
-            {currentTrack.externalUrl ? (
-              <a
-                href={currentTrack.externalUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="block text-sm font-semibold text-text-base hover:underline text-truncate-1"
-              >
-                {currentTrack.title}
-              </a>
-            ) : (
-              <Link to="/now-playing" className="block text-sm font-semibold text-text-base text-truncate-1">
-                {currentTrack.title}
-              </Link>
-            )}
+            <Link to="/now-playing" className="block text-sm font-semibold text-text-base text-truncate-1">
+              {currentTrack.title}
+            </Link>
             <div className="mt-0.5 flex items-center gap-2 text-xs text-text-muted">
               {showArtistLink ? (
                 <Link
@@ -117,9 +106,7 @@ const BottomPlayer = () => {
                   {currentTrack.album}
                 </Link>
               ) : null}
-              <span className="hidden md:inline-block rounded-full border border-white/8 bg-white/6 px-2 py-0.5 text-[10px] uppercase tracking-[0.22em]">
-                {currentTrack.providerLabel}
-              </span>
+
             </div>
           </div>
           
@@ -264,9 +251,7 @@ const BottomPlayer = () => {
               style={{ left: `calc(${volumeWidth} - 6px)` }}
             />
           </div>
-          <div className="rounded-full border border-white/8 bg-white/6 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-text-subdued">
-            {currentTrack.providerLabel}
-          </div>
+
         </div>
       </div>
     </div>
