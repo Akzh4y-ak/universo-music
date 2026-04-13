@@ -8,6 +8,8 @@ import PlaylistCard from '../components/shared/PlaylistCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
+import HomeRecentsGrid from '../components/shared/HomeRecentsGrid';
+import HorizontalSection from '../components/shared/HorizontalSection';
 import { useMusic } from '../context/music';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { filterExplicitTracks } from '../utils/catalog';
@@ -138,20 +140,29 @@ const Home = () => {
         <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle,_rgba(255,255,255,0.1),_transparent_62%)] md:block" />
         <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
           <div className="max-w-2xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/12 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-brand">
-              <Sparkles className="h-4 w-4" />
-              <span>{greeting()}</span>
+            <div className="flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/12 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-brand">
+                <Sparkles className="h-4 w-4" />
+                <span>{greeting()}</span>
+              </div>
             </div>
-            <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+            <h1 className="hidden text-4xl font-black tracking-tight text-white md:block md:text-5xl lg:text-6xl">
               Real music, instant play, no sign-in wall.
             </h1>
-            <p className="max-w-xl text-base leading-7 text-text-muted md:text-lg">
+            <h1 className="text-3xl font-black tracking-tight text-white md:hidden">
+              {greeting()}
+            </h1>
+            <p className="hidden max-w-xl text-base leading-7 text-text-muted md:block md:text-lg">
               This home experience now blends your recent listening, saved tracks, playlists,
               and a live open catalog so the app feels closer to a real everyday streaming home.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row xl:flex-col xl:w-[340px] shrink-0">
+          <div className="md:hidden">
+             <HomeRecentsGrid items={[...personalizedRecent, ...activePlaylists].slice(0,6)} />
+          </div>
+
+          <div className="hidden flex-col gap-3 sm:flex-row xl:flex-col xl:w-[340px] shrink-0 md:flex">
             <div className="flex flex-1 items-start gap-4 rounded-xl border border-white/8 bg-white/5 p-4">
               <TrendingUp className="h-6 w-6 shrink-0 text-brand" />
               <div>
@@ -189,7 +200,27 @@ const Home = () => {
       ) : null}
 
       {personalizedRecent.length > 0 ? (
-        <section>
+        <div className="md:hidden">
+          <HorizontalSection 
+            title="Jump Back In" 
+            subtitle="Recent plays ready to restart instantly"
+            to="/recent"
+          >
+            {personalizedRecent.map((track, index) => (
+              <div key={`mob-recent-${track.id}`} className="w-36 flex-shrink-0">
+                <TrackCard 
+                  track={track} 
+                  queueContext={personalizedRecent} 
+                  queueIndex={index} 
+                />
+              </div>
+            ))}
+          </HorizontalSection>
+        </div>
+      ) : null}
+
+      {personalizedRecent.length > 0 ? (
+        <section className="hidden md:block">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-white">Jump Back In</h2>
@@ -321,84 +352,47 @@ const Home = () => {
         </div>
       </section>
 
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <Link to="/genre/hindi" className="text-2xl font-bold transition-colors hover:text-brand">
-            Hindi Hits
-          </Link>
-          <Link to="/genre/hindi" className="text-sm font-bold text-text-subdued uppercase tracking-wider transition-colors hover:text-white">
-            Open genre
-          </Link>
-        </div>
-        {loading ? renderSkeletons() : visibleElectronic.length === 0 ? (
-          <CatalogFeedback
-            title="No Hindi picks yet"
-            message={electronic.length > 0 && !preferences.allowExplicit
-              ? 'Hindi matches are available, but they are hidden by your explicit-content setting.'
-              : 'This Hindi lane came back empty. Open the genre page or run a direct search instead.'}
-            actionLabel={electronic.length > 0 && !preferences.allowExplicit ? 'Open settings' : 'Browse Hindi'}
-            actionTo={electronic.length > 0 && !preferences.allowExplicit ? '/settings' : '/genre/hindi'}
-          />
-        ) : (
-          <TrackGrid>
-            {visibleElectronic.map((track, i) => (
-              <TrackCard key={track.id} track={track} queueContext={visibleElectronic} queueIndex={i} />
-            ))}
-          </TrackGrid>
-        )}
-      </section>
+      <HorizontalSection 
+        title="Hindi Hits" 
+        subtitle="Bollywood leaders and chart staples"
+        to="/genre/hindi"
+      >
+        {loading ? Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="w-36 flex-shrink-0"><SkeletonCard /></div>
+        )) : visibleElectronic.map((track, i) => (
+          <div key={track.id} className="w-36 flex-shrink-0">
+            <TrackCard track={track} queueContext={visibleElectronic} queueIndex={i} />
+          </div>
+        ))}
+      </HorizontalSection>
 
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <Link to="/genre/punjabi" className="text-2xl font-bold transition-colors hover:text-brand">
-            Punjabi Energy
-          </Link>
-          <Link to="/genre/punjabi" className="text-sm font-bold text-text-subdued uppercase tracking-wider transition-colors hover:text-white">
-            Open genre
-          </Link>
-        </div>
-        {loading ? renderSkeletons() : visibleIndiePulse.length === 0 ? (
-          <CatalogFeedback
-            title="No Punjabi picks yet"
-            message={indiePulse.length > 0 && !preferences.allowExplicit
-              ? 'Punjabi tracks were found, but they are hidden by your explicit-content setting.'
-              : 'We did not get a usable result set for this Punjabi lane.'}
-            actionLabel={indiePulse.length > 0 && !preferences.allowExplicit ? 'Open settings' : 'Browse Punjabi'}
-            actionTo={indiePulse.length > 0 && !preferences.allowExplicit ? '/settings' : '/genre/punjabi'}
-          />
-        ) : (
-          <TrackGrid>
-            {visibleIndiePulse.map((track, index) => (
-              <TrackCard key={track.id} track={track} queueContext={visibleIndiePulse} queueIndex={index} />
-            ))}
-          </TrackGrid>
-        )}
-      </section>
+      <HorizontalSection 
+        title="Punjabi Energy" 
+        subtitle="Bhangra drive and crossover anthems"
+        to="/genre/punjabi"
+      >
+        {loading ? Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="w-36 flex-shrink-0"><SkeletonCard /></div>
+        )) : visibleIndiePulse.map((track, i) => (
+          <div key={track.id} className="w-36 flex-shrink-0">
+            <TrackCard track={track} queueContext={visibleIndiePulse} queueIndex={i} />
+          </div>
+        ))}
+      </HorizontalSection>
 
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <Link to="/genre/tamil" className="text-2xl font-bold transition-colors hover:text-brand">
-            Tamil Essentials
-          </Link>
-          <Link to="/genre/tamil" className="text-sm font-bold text-text-subdued uppercase tracking-wider transition-colors hover:text-white">
-            Open genre
-          </Link>
-        </div>
-        {loading ? renderSkeletons() : visibleHiphop.length === 0 ? (
-          <CatalogFeedback
-            title="No Tamil picks yet"
-            message="This Tamil discovery lane came back empty. Try the genre page or a direct search."
-            actionLabel="Browse Tamil"
-            actionTo="/genre/tamil"
-          />
-        ) : (
-          <TrackGrid>
-            {visibleHiphop.map((track, index) => (
-              <TrackCard key={track.id} track={track} queueContext={visibleHiphop} queueIndex={index} />
-            ))}
-          </TrackGrid>
-        )}
-      </section>
+      <HorizontalSection 
+        title="Tamil Essentials" 
+        subtitle="Kollywood favorites"
+        to="/genre/tamil"
+      >
+        {loading ? Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="w-36 flex-shrink-0"><SkeletonCard /></div>
+        )) : visibleHiphop.map((track, i) => (
+          <div key={track.id} className="w-36 flex-shrink-0">
+            <TrackCard track={track} queueContext={visibleHiphop} queueIndex={i} />
+          </div>
+        ))}
+      </HorizontalSection>
 
       <section>
         <div className="mb-4 flex items-center justify-between">

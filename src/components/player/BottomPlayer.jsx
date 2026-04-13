@@ -64,14 +64,22 @@ const BottomPlayer = () => {
   const showAlbumLink = Boolean(currentTrack.album && albumSlug);
 
   return (
-    <div className="glass-panel w-full border-t border-white/8 px-4 py-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] md:px-6">
+    <div className="glass-panel relative w-full border-t border-white/8 px-4 py-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] md:px-6 md:rounded-none md:border-x-0 md:mx-0 rounded-xl mx-0 md:static">
+      {/* Mobile-only Progress Bar at the Top */}
+      <div className="absolute top-0 left-2 right-2 h-[2px] bg-white/10 md:hidden overflow-hidden rounded-full">
+        <div 
+            className="h-full bg-white transition-all duration-300" 
+            style={{ width: progressWidth }} 
+        />
+      </div>
+
       <div className="flex items-center justify-between md:grid md:gap-3 md:grid-cols-[minmax(220px,1fr)_minmax(320px,1.2fr)_minmax(180px,0.8fr)] md:items-center">
         <div className="flex min-w-0 flex-1 md:flex-none items-center gap-3 pr-2 md:pr-0">
           <Link to="/now-playing" className="shrink-0 flex items-center">
             <img
               src={currentTrack.cover}
               alt={currentTrack.title}
-              className="h-12 w-12 rounded-xl object-cover shadow-lg md:h-14 md:w-14"
+              className="h-10 w-10 rounded-lg object-cover shadow-lg md:h-14 md:w-14 md:rounded-xl"
             />
           </Link>
           <div className="min-w-0 flex-1">
@@ -106,11 +114,10 @@ const BottomPlayer = () => {
                   {currentTrack.album}
                 </Link>
               ) : null}
-
             </div>
           </div>
           
-          <div className="flex items-center gap-1 md:hidden ml-auto shrink-0">
+          <div className="flex items-center gap-2 md:hidden ml-auto shrink-0">
             <button
               onClick={() => toggleLike(currentTrack)}
               className="p-2 transition-transform hover:scale-110"
@@ -118,7 +125,7 @@ const BottomPlayer = () => {
             >
               <Heart
                 className={`h-5 w-5 ${
-                  liked ? 'fill-brand text-brand' : 'text-text-muted hover:text-white'
+                  liked ? 'fill-brand text-brand' : 'text-text-muted'
                 }`}
               />
             </button>
@@ -127,9 +134,9 @@ const BottomPlayer = () => {
               className="flex h-10 w-10 items-center justify-center text-white"
             >
               {isPlaying ? (
-                <Pause className="h-6 w-6 fill-current" />
+                <Pause className="h-7 w-7 fill-current" />
               ) : (
-                <Play className="h-6 w-6 fill-current ml-1" />
+                <Play className="h-7 w-7 fill-current ml-0.5" />
               )}
             </button>
           </div>

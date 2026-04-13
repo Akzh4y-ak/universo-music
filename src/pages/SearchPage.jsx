@@ -154,44 +154,30 @@ const SearchPage = () => {
       </div>
 
       {!query ? (
-        <section className="space-y-5">
+        <section className="space-y-6">
+          <h1 className="text-3xl font-black tracking-tight text-white md:hidden mt-2">Search</h1>
+          
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="mb-2 text-xl font-bold">Browse Live Categories</h2>
-              <p className="text-sm text-text-subdued">
-                Open richer discovery lanes directly instead of starting from a blank search box.
-              </p>
+              <h2 className="text-xl font-bold md:text-2xl">Browse all</h2>
             </div>
-            <Link
-              to="/trending"
-              className="rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-text-subdued transition-colors hover:text-white"
-            >
-              Open trending
-            </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {featuredGenres.map((genre) => (
               <Link
                 key={genre.id}
                 to={`/genre/${genre.id}`}
-                className={`group relative overflow-hidden rounded-[24px] border border-white/8 bg-gradient-to-br ${genre.gradient} p-5 shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition-transform hover:-translate-y-1`}
+                className={`group relative aspect-[16/10] overflow-hidden rounded-lg bg-gradient-to-br ${genre.gradient} shadow-lg transition-transform active:scale-95`}
               >
+                <div className="absolute inset-0 bg-black/10" />
+                <h3 className="relative z-10 p-3 text-lg font-black tracking-tight text-white drop-shadow-md md:text-xl">
+                  {genre.title}
+                </h3>
                 <img
                   src={genre.image}
                   alt={genre.title}
-                  className="absolute inset-0 h-full w-full object-cover opacity-25 transition-transform duration-500 group-hover:scale-105"
+                  className="absolute -bottom-2 -right-6 h-28 w-28 rotate-[25deg] object-cover opacity-50 transition-transform group-hover:scale-110 md:h-32 md:w-32"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.72))]" />
-                <div className="relative z-10 flex h-full min-h-40 flex-col justify-between">
-                  <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-white/80">
-                    <span className={`h-2 w-2 rounded-full ${genre.color}`} />
-                    <span>Open genre</span>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-2xl font-black tracking-tight text-white">{genre.title}</h3>
-                    <p className="max-w-xs text-sm leading-6 text-white/80">{genre.subtitle}</p>
-                  </div>
-                </div>
               </Link>
             ))}
           </div>

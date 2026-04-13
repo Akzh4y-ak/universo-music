@@ -4,8 +4,7 @@ import { NavLink } from 'react-router-dom';
 const mobileLinks = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/search', label: 'Search', icon: Search },
-  { to: '/trending', label: 'Trending', icon: Compass },
-  { to: '/playlists', label: 'Library', icon: LibraryBig },
+  { to: '/library', label: 'Library', icon: LibraryBig },
 ];
 
 const MobileBottomNav = () => {
