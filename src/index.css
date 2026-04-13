@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #1ed760;
+  --color-brand-hover: #1fdf64;
+  --color-bg-base: #000000;
+  --color-bg-surface: #121212;
+  --color-bg-elevated: #242424;
+  --color-bg-highlight: #1a1a1a;
+  --color-text-base: #ffffff;
+  --color-text-muted: #b3b3b3;
+  --color-text-subdued: #a7a7a7;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-base text-text-base font-sans antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .nav-progress-bar {
+    animation: nav-progress 0.65s ease-out forwards;
+  }
+  .glass-panel {
+    @apply bg-bg-surface/70 backdrop-blur-md border border-white/5;
+  }
+  .neon-hover {
+    @apply hover:text-brand hover:drop-shadow-[0_0_8px_rgba(30,215,96,0.6)] transition-all duration-300;
+  }
+  .text-truncate-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@keyframes nav-progress {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.08);
+  }
+
+  15% {
+    opacity: 1;
+    transform: scaleX(0.28);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scaleX(0.72);
+  }
+
+  85% {
+    opacity: 1;
+    transform: scaleX(0.94);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
