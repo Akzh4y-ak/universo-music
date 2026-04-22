@@ -5,6 +5,23 @@ import { slugifyValue } from '../../utils/musicMeta';
 const JIOSAAVN_API_ROOT = 'https://jiosaavn-api-privatecvc2.vercel.app';
 const FALLBACK_COVER =
   'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600';
+const playlistSearchCache = new Map();
+const playlistDetailsCache = new Map();
+const EDITORIAL_TRENDING_SOURCES = {
+  'featured pop': [
+    { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
+    { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
+    { query: 'trending', preferredName: 'Trending Today', preferredLanguages: ['english'] },
+  ],
+  'latest hindi punjabi hits': [
+    { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
+    { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
+  ],
+  'global dance pop hits': [
+    { query: 'trending', preferredName: 'English Viral Hits', preferredLanguages: ['english'] },
+    { query: 'top charts', preferredName: 'International Charts', preferredLanguages: ['english'] },
+  ],
+};
 
 function formatDuration(seconds) {
   if (!seconds || Number.isNaN(Number(seconds))) {
@@ -46,6 +63,23 @@ function getBestStreamUrl(downloadUrlArray) {
   return downloadUrlArray[downloadUrlArray.length - 1]?.link || '';
 }
 
+function normalizeText(value = '') {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function buildFallbackTrackId(track) {
+  const fallbackKey = slugifyValue([
+    track.name || 'track',
+    track.primaryArtists || 'artist',
+    track.album?.name || '',
+  ].join('-'));
+
+  return `saavn-${fallbackKey || 'track'}`;
+}
+
 function normalizeJioSaavnTrack(track) {
   const artistName = track.primaryArtists || 'Unknown Artist';
   const albumName = track.album?.name || '';
@@ -53,7 +87,7 @@ function normalizeJioSaavnTrack(track) {
   const streamUrl = getBestStreamUrl(track.downloadUrl);
 
   return {
-    id: `saavn-${track.id || Math.random().toString(36).slice(2)}`,
+    id: track.id ? `saavn-${track.id}` : buildFallbackTrackId(track),
     catalogId: track.id || '',
     title: track.name || 'Unknown Title',
     artist: artistName,
@@ -72,6 +106,9 @@ function normalizeJioSaavnTrack(track) {
     providerLabel: 'Univerzo',
     isRealStream: true,
     isExplicit: track.explicitContent === 1 || track.explicitContent === true,
+    language: track.language || '',
+    playCount: Number(track.playCount) || 0,
+    releaseDate: track.releaseDate || '',
   };
 }
 
@@ -95,8 +132,139 @@ export async function searchJioSaavnTracks(query, page = 0, limit = 24) {
   }
 }
 
+async function searchJioSaavnPlaylists(query, page = 0, limit = 12) {
+  if (!query) {
+    return [];
+  }
+
+  const cacheKey = `${query}::${page}::${limit}`;
+
+  if (playlistSearchCache.has(cacheKey)) {
+    return playlistSearchCache.get(cacheKey);
+  }
+
+  try {
+    const response = await axios.get(`${JIOSAAVN_API_ROOT}/search/playlists`, {
+      params: { query, page, limit },
+    });
+
+    const results = response.data?.data?.results || [];
+    playlistSearchCache.set(cacheKey, results);
+    return results;
+  } catch (error) {
+    console.error('JioSaavn playlist search error:', error.message);
+    return [];
+  }
+}
+
+async function getJioSaavnPlaylist(playlistId) {
+  if (!playlistId) {
+    return null;
+  }
+
+  if (playlistDetailsCache.has(playlistId)) {
+    return playlistDetailsCache.get(playlistId);
+  }
+
+  try {
+    const response = await axios.get(`${JIOSAAVN_API_ROOT}/playlists`, {
+      params: { id: playlistId },
+    });
+
+    const playlist = response.data?.data || null;
+
+    if (playlist) {
+      playlistDetailsCache.set(playlistId, playlist);
+    }
+
+    return playlist;
+  } catch (error) {
+    console.error('JioSaavn playlist fetch error:', error.message);
+    return null;
+  }
+}
+
+function getPlaylistMatchScore(playlist, preferredName = '', preferredLanguages = []) {
+  const normalizedName = normalizeText(playlist?.name || '');
+  const normalizedPreferredName = normalizeText(preferredName);
+  const normalizedLanguage = (playlist?.language || '').toLowerCase();
+  const editorialOwner = normalizeText(`${playlist?.firstname || ''} ${playlist?.lastname || ''}`);
+  let score = 0;
+
+  if (normalizedPreferredName && normalizedName === normalizedPreferredName) {
+    score += 120;
+  } else if (normalizedPreferredName && normalizedName.includes(normalizedPreferredName)) {
+    score += 60;
+  }
+
+  if (preferredLanguages.includes(normalizedLanguage)) {
+    score += 20;
+  }
+
+  if (editorialOwner.includes('jiosaavn')) {
+    score += 10;
+  }
+
+  return score;
+}
+
+function selectEditorialPlaylist(playlists = [], preferredName = '', preferredLanguages = []) {
+  return playlists
+    .slice()
+    .sort((left, right) => (
+      getPlaylistMatchScore(right, preferredName, preferredLanguages)
+      - getPlaylistMatchScore(left, preferredName, preferredLanguages)
+    ))[0] || null;
+}
+
+async function getEditorialPlaylistTracks(sources = [], page = 0, limit = 12) {
+  if (!Array.isArray(sources) || sources.length === 0) {
+    return [];
+  }
+
+  const trackGroups = await Promise.all(sources.map(async (source) => {
+    const playlists = await searchJioSaavnPlaylists(source.query, 0, 10);
+    const match = selectEditorialPlaylist(
+      playlists,
+      source.preferredName,
+      source.preferredLanguages || [],
+    );
+
+    if (!match?.id) {
+      return [];
+    }
+
+    const playlist = await getJioSaavnPlaylist(match.id);
+    const tracks = playlist?.songs || [];
+
+    return tracks
+      .map(normalizeJioSaavnTrack)
+      .filter((track) => track.url);
+  }));
+
+  const mergedTracks = [];
+  const seenTrackIds = new Set();
+
+  trackGroups.flat().forEach((track) => {
+    if (!track?.id || seenTrackIds.has(track.id)) {
+      return;
+    }
+
+    seenTrackIds.add(track.id);
+    mergedTracks.push(track);
+  });
+
+  const startIndex = Math.max(0, page) * Math.max(1, limit);
+  return mergedTracks.slice(startIndex, startIndex + Math.max(1, limit));
+}
+
 export async function getJioSaavnTrendingTracks(seed = 'trending hits', page = 0, limit = 12) {
-  // JioSaavn API doesn't have a dedicated trending endpoint,
-  // so we search for trending-style queries
+  const sources = EDITORIAL_TRENDING_SOURCES[seed] || EDITORIAL_TRENDING_SOURCES['featured pop'];
+  const editorialTracks = await getEditorialPlaylistTracks(sources, page, limit);
+
+  if (editorialTracks.length > 0) {
+    return editorialTracks;
+  }
+
   return searchJioSaavnTracks(seed, page, limit);
 }

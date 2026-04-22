@@ -7,7 +7,7 @@ import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import { useMusic } from '../context/music';
-import { getTrendingTracks, searchTracks } from '../services/api';
+import { getTrendingTracks } from '../services/api';
 import { filterExplicitTracks } from '../utils/catalog';
 
 const TrendingPage = () => {
@@ -33,8 +33,8 @@ const TrendingPage = () => {
       try {
         const [chartResults, viralResults, worldResults] = await Promise.all([
           getTrendingTracks('featured pop', 30, 0),
-          searchTracks('latest hindi punjabi hits', 12),
-          searchTracks('global dance pop hits', 12),
+          getTrendingTracks('latest hindi punjabi hits', 12, 0),
+          getTrendingTracks('global dance pop hits', 12, 0),
         ]);
 
         if (cancelled) {
