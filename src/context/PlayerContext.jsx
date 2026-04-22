@@ -2,31 +2,38 @@ import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { getMusicProviderInfo } from '../config/music';
 import { searchTracks } from '../services/api';
 import { PlayerContext, PlayerProgressContext } from './player';
+import { readStoredJson, readStoredNumber, readStoredString } from '../utils/storage';
+
+function clearAudioSource(audio) {
+  audio.pause();
+  audio.removeAttribute('src');
+  audio.load();
+}
 
 export const PlayerProvider = ({ children }) => {
   const providerInfo = getMusicProviderInfo();
   const [currentTrack, setCurrentTrack] = useState(() => {
-    const local = localStorage.getItem('univerzo_current_track');
-    return local ? JSON.parse(local) : null;
+    const storedTrack = readStoredJson('univerzo_current_track', null);
+    return storedTrack && typeof storedTrack === 'object' ? storedTrack : null;
   });
   const [isPlaying, setIsPlaying] = useState(false);
   const [queue, setQueue] = useState(() => {
-    const local = localStorage.getItem('univerzo_queue');
-    return local ? JSON.parse(local) : [];
+    const storedQueue = readStoredJson('univerzo_queue', []);
+    return Array.isArray(storedQueue) ? storedQueue.filter(Boolean) : [];
   });
   const [queueIndex, setQueueIndex] = useState(() => {
-    const local = localStorage.getItem('univerzo_queue_index');
-    return local ? Number(local) : -1;
+    return readStoredNumber('univerzo_queue_index', -1);
   });
   const [playbackEngine, setPlaybackEngine] = useState('html-audio');
   const [volume, setVolume] = useState(() => {
-    return parseFloat(localStorage.getItem('univerzo_volume')) || 0.5;
+    const storedVolume = readStoredNumber('univerzo_volume', 0.5);
+    return storedVolume >= 0 && storedVolume <= 1 ? storedVolume : 0.5;
   });
   const [shuffleEnabled, setShuffleEnabled] = useState(() => {
     return localStorage.getItem('univerzo_shuffle') === 'true';
   });
   const [repeatMode, setRepeatMode] = useState(() => {
-    return localStorage.getItem('univerzo_repeat_mode') || 'off';
+    return readStoredString('univerzo_repeat_mode', 'off');
   });
   const [autoAdvance, setAutoAdvance] = useState(() => {
     return localStorage.getItem('univerzo_auto_advance') !== 'false';
@@ -38,8 +45,8 @@ export const PlayerProvider = ({ children }) => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(() => currentTrack?.durationSeconds || 30);
   const [sleepTimerEndsAt, setSleepTimerEndsAt] = useState(() => {
-    const local = localStorage.getItem('univerzo_sleep_timer_ends_at');
-    return local ? Number(local) : null;
+    const storedTime = readStoredNumber('univerzo_sleep_timer_ends_at', null);
+    return typeof storedTime === 'number' ? storedTime : null;
   });
   const [sleepTimerTick, setSleepTimerTick] = useState(() => Date.now());
   const [radioSourceTrack, setRadioSourceTrack] = useState(null);
@@ -54,6 +61,7 @@ export const PlayerProvider = ({ children }) => {
   });
 
   const audioRef = useRef(new Audio());
+  const loadedTrackUrlRef = useRef('');
 
   useEffect(() => {
     localStorage.setItem('univerzo_volume', volume.toString());
@@ -104,12 +112,28 @@ export const PlayerProvider = ({ children }) => {
   useEffect(() => {
     const audio = audioRef.current;
     audio.preload = 'auto';
+  }, []);
 
-    if (currentTrack?.url) {
-      audio.src = currentTrack.url;
-      audio.volume = volume;
+  useEffect(() => {
+    const audio = audioRef.current;
+    const nextTrackUrl = currentTrack?.url;
+
+    if (!nextTrackUrl) {
+      if (loadedTrackUrlRef.current) {
+        loadedTrackUrlRef.current = '';
+        clearAudioSource(audio);
+      }
+      return;
     }
-  }, [currentTrack?.durationSeconds, currentTrack?.url, volume]);
+
+    if (loadedTrackUrlRef.current === nextTrackUrl) {
+      return;
+    }
+
+    loadedTrackUrlRef.current = nextTrackUrl;
+    audio.src = nextTrackUrl;
+    audio.load();
+  }, [currentTrack?.url]);
 
   useEffect(() => {
     if (!sleepTimerEndsAt) {
@@ -140,7 +164,20 @@ export const PlayerProvider = ({ children }) => {
 
   const loadTrackUrl = useCallback(async (url) => {
     const audio = audioRef.current;
-    audio.src = url;
+
+    if (!url) {
+      loadedTrackUrlRef.current = '';
+      clearAudioSource(audio);
+      setIsPlaying(false);
+      return;
+    }
+
+    if (loadedTrackUrlRef.current !== url) {
+      loadedTrackUrlRef.current = url;
+      audio.src = url;
+      audio.load();
+    }
+
     audio.volume = volume;
     try {
       await audio.play();
@@ -229,6 +266,7 @@ export const PlayerProvider = ({ children }) => {
     }
 
     setIsPlaying(false);
+    loadTrackUrl(null);
     setProviderStatus((previous) => ({
       ...previous,
       message: 'This track is missing a playable source.',

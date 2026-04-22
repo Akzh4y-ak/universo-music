@@ -1,13 +1,7 @@
 import { Music2 } from 'lucide-react';
-import { NavLink, Link } from 'react-router-dom';
-import { featuredGenreIds, genres } from '../../data/genres';
+import { Link } from 'react-router-dom';
 
 const MobileHeader = () => {
-  const featuredGenres = featuredGenreIds
-    .slice(0, 6)
-    .map((genreId) => genres.find((genre) => genre.id === genreId))
-    .filter(Boolean);
-
   return (
     <div className="md:hidden sticky top-0 z-40 bg-bg-base/80 backdrop-blur-lg">
       <div className="flex items-center justify-between px-4 py-3">

@@ -14,14 +14,22 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
       },
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
+      includeAssets: ['favicon.svg', 'icons.svg'],
       manifest: {
         name: 'Univerzo Music',
         short_name: 'Univerzo',
-        description: 'Listen to your favorite trending tracks.',
+        description: 'Stream trending songs and curated discovery playlists in Univerzo Music.',
         theme_color: '#000000',
         background_color: '#000000',
-        display: 'standalone'
+        display: 'standalone',
+        icons: [
+          {
+            src: 'favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable',
+          },
+        ],
       }
     })
   ],

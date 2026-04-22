@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MusicContext } from './music';
 import { slugifyValue } from '../utils/musicMeta';
+import { readStoredJson, readStoredString } from '../utils/storage';
 
 const defaultPreferences = {
   allowExplicit: true,
@@ -30,34 +31,27 @@ function ensurePlaylistList(value) {
 
 export const MusicProvider = ({ children }) => {
   const [likedSongs, setLikedSongs] = useState(() => {
-    const local = localStorage.getItem('univerzo_liked');
-    return local ? JSON.parse(local) : [];
+    return ensureTrackList(readStoredJson('univerzo_liked', []));
   });
 
   const [recentPlays, setRecentPlays] = useState(() => {
-    const local = localStorage.getItem('univerzo_recent');
-    return local ? JSON.parse(local) : [];
+    return ensureTrackList(readStoredJson('univerzo_recent', []));
   });
 
   const [playlists, setPlaylists] = useState(() => {
-    const local = localStorage.getItem('univerzo_playlists');
-    return local ? JSON.parse(local) : [];
+    return ensurePlaylistList(readStoredJson('univerzo_playlists', []));
   });
 
   const [activePlaylistId, setActivePlaylistId] = useState(() => {
-    return localStorage.getItem('univerzo_active_playlist') || '';
+    return readStoredString('univerzo_active_playlist', '');
   });
 
   const [preferences, setPreferences] = useState(() => {
-    const local = localStorage.getItem('univerzo_preferences');
-
-    if (!local) {
-      return defaultPreferences;
-    }
+    const storedPreferences = readStoredJson('univerzo_preferences', {});
 
     return {
       ...defaultPreferences,
-      ...JSON.parse(local),
+      ...(storedPreferences && typeof storedPreferences === 'object' ? storedPreferences : {}),
     };
   });
 

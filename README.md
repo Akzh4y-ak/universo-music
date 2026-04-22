@@ -4,31 +4,19 @@ Univerzo Music is a React + Vite music streaming frontend with a persistent play
 
 ## Current Catalog Setup
 
-- Default provider: `Audius`
-- Optional providers: `Jamendo`, `Apple Music`
-- No preview fallback is used in the active catalog flow
+- Active provider: `JioSaavn`
+- Playback: full-track browser streaming with no listener login
+- Discovery: editorial playlist-backed sections for trending and genre lanes
 
-The current default path is designed to work without listener login by streaming from Audius's open catalog in the browser.
+The current catalog flow uses the live JioSaavn-backed provider configured in [`src/config/music.js`](./src/config/music.js).
 
 ## Environment
 
-Copy `.env.example` to `.env` and set the values you need:
+Copy `.env.example` to `.env` if you want a local place for future app-specific overrides:
 
 ```env
-VITE_MUSIC_PROVIDER=audius
-VITE_AUDIUS_API_KEY=
-VITE_JAMENDO_CLIENT_ID=
-VITE_JAMENDO_AUDIO_FORMAT=mp32
-VITE_APPLE_MUSIC_DEVELOPER_TOKEN=
-VITE_APPLE_MUSIC_STOREFRONT=us
-VITE_APPLE_MUSIC_APP_NAME=Univerzo Music
+# No environment variables are required for the current JioSaavn catalog flow.
 ```
-
-Provider notes:
-
-- `audius`: default no-login catalog path
-- `jamendo`: optional alternative if you have your own Jamendo client id
-- `apple-music`: requires Apple Music credentials and listener authorization
 
 ## Scripts
 
@@ -42,5 +30,6 @@ npm run build
 ## Production Notes
 
 - The app is frontend-only right now. Likes and recent plays are stored locally in the browser.
+- Play queue, current track, player preferences, and library state are also persisted in local storage.
 - If you need analytics, auth, subscriptions, or server-managed provider credentials, add a backend before launch.
 - On this Windows + OneDrive environment, `npm run build` may fail inside restricted sandboxes because of native dependency loading. Running the build directly on the machine works.

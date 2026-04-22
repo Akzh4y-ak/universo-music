@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { usePlayer } from '../../context/player';
 import { useMusic } from '../../context/music';
 import { motion } from 'framer-motion';
-import { getTrackAlbumSlug, getTrackArtistSlug } from '../../utils/musicMeta';
+import { getTrackArtistSlug } from '../../utils/musicMeta';
 
 const MotionCard = motion.div;
 
@@ -16,9 +16,7 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
   const liked = isLiked(track.id);
   const savedToPlaylist = isTrackInAnyPlaylist(track.id);
   const artistSlug = getTrackArtistSlug(track);
-  const albumSlug = getTrackAlbumSlug(track);
   const showArtistLink = Boolean(track.artist && artistSlug);
-  const showAlbumLink = Boolean(track.album && albumSlug);
 
   const handlePlay = () => {
     if (isCurrentTrack) {
