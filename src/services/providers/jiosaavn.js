@@ -7,20 +7,107 @@ const FALLBACK_COVER =
   'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600';
 const playlistSearchCache = new Map();
 const playlistDetailsCache = new Map();
-const EDITORIAL_TRENDING_SOURCES = {
+const featuredPopSources = [
+  { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
+  { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
+  { query: 'trending', preferredName: 'Trending Today', preferredLanguages: ['english'] },
+];
+const desiMomentumSources = [
+  { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
+  { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
+];
+const worldwideEnergySources = [
+  { query: 'trending', preferredName: 'English Viral Hits', preferredLanguages: ['english'] },
+  { query: 'top charts', preferredName: 'International Charts', preferredLanguages: ['english'] },
+];
+const hindiSources = [
+  { query: 'hindi hits', preferredName: 'Hindi: India Superhits Top 50', preferredLanguages: ['hindi'] },
+  { query: 'hindi hits', preferredName: 'Hindi Hit Songs', preferredLanguages: ['hindi'] },
+];
+const punjabiSources = [
+  { query: 'punjabi hits', preferredName: 'Punjabi: India Superhits Top 50', preferredLanguages: ['punjabi'] },
+  { query: 'punjabi hits', preferredName: 'Punjabi Hit Songs', preferredLanguages: ['punjabi'] },
+];
+const tamilSources = [
+  { query: 'tamil hits', preferredName: 'Tamil: India Superhits Top 50', preferredLanguages: ['tamil'] },
+  { query: 'tamil hits', preferredName: 'Tamil Hit Songs', preferredLanguages: ['tamil'] },
+];
+const teluguSources = [
+  { query: 'telugu hits', preferredName: 'Telugu: India Superhits Top 50', preferredLanguages: ['telugu'] },
+  { query: 'telugu hits', preferredName: 'Telugu Viral Hits', preferredLanguages: ['telugu'] },
+];
+const englishSources = [
+  { query: 'top charts', preferredName: 'International Charts', preferredLanguages: ['english'] },
+  { query: 'english pop', preferredName: 'Best Of Pop - English', preferredLanguages: ['english'] },
+  { query: 'english pop', preferredName: 'Global Pop', preferredLanguages: ['english'] },
+  { query: 'trending', preferredName: 'English Viral Hits', preferredLanguages: ['english'] },
+];
+const hiphopSources = [
+  { query: 'hip hop', preferredName: 'Best Of Hip Hop - English', preferredLanguages: ['english'] },
+  { query: 'hip hop', preferredName: 'Rap Cypher', preferredLanguages: ['english'] },
+];
+const lofiSources = [
+  { query: 'lofi', preferredName: 'Lofi India Hits', preferredLanguages: ['hindi'] },
+  { query: 'lofi', preferredName: 'Monsoon Lofi Beats', preferredLanguages: ['hindi'] },
+];
+const edmSources = [
+  { query: 'edm', preferredName: 'Best Of EDM - English', preferredLanguages: ['english'] },
+  { query: 'edm', preferredName: 'Fresh Dance Hits', preferredLanguages: ['english'] },
+  { query: 'edm', preferredName: 'EDM Uplift', preferredLanguages: ['english'] },
+];
+const rnbSources = [
+  { query: 'rnb', preferredName: 'Best Of RnB - English', preferredLanguages: ['english'] },
+  { query: 'rnb', preferredName: 'Fresh RnB Hits', preferredLanguages: ['english'] },
+];
+const jazzSources = [
+  { query: 'jazz', preferredName: 'Best Of Jazz - English', preferredLanguages: ['english'] },
+  { query: 'jazz', preferredName: 'Fresh Jazz Hits', preferredLanguages: ['english'] },
+];
+const workoutSources = [
+  { query: 'workout', preferredName: 'Ultimate Workout Mix', preferredLanguages: ['english'] },
+  { query: 'workout', preferredName: 'Workout From Home - English', preferredLanguages: ['english'] },
+];
+const acousticSources = [
+  { query: 'acoustic', preferredName: 'Best Of Acoustic Pop - English', preferredLanguages: ['english'] },
+  { query: 'acoustic', preferredName: 'Acoustic Sessions', preferredLanguages: ['english'] },
+  { query: 'acoustic', preferredName: 'Acoustic Nights', preferredLanguages: ['english'] },
+];
+const EDITORIAL_DISCOVERY_SOURCES = {
   'featured pop': [
-    { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
-    { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
-    { query: 'trending', preferredName: 'Trending Today', preferredLanguages: ['english'] },
+    ...featuredPopSources,
   ],
+  'desi-momentum': [...desiMomentumSources],
   'latest hindi punjabi hits': [
-    { query: 'trending', preferredName: 'Trending Songs', preferredLanguages: ['hindi', 'punjabi'] },
-    { query: 'trending', preferredName: 'Now Trending', preferredLanguages: ['hindi', 'punjabi'] },
+    ...desiMomentumSources,
   ],
+  'worldwide-energy': [...worldwideEnergySources],
   'global dance pop hits': [
-    { query: 'trending', preferredName: 'English Viral Hits', preferredLanguages: ['english'] },
-    { query: 'top charts', preferredName: 'International Charts', preferredLanguages: ['english'] },
+    ...worldwideEnergySources,
   ],
+  hindi: [...hindiSources],
+  'latest hindi songs bollywood hits': [...hindiSources],
+  punjabi: [...punjabiSources],
+  'punjabi pop bhangra hits': [...punjabiSources],
+  tamil: [...tamilSources],
+  'tamil hits kollywood songs': [...tamilSources],
+  telugu: [...teluguSources],
+  'telugu hits tollywood songs': [...teluguSources],
+  english: [...englishSources],
+  'international pop hits': [...englishSources],
+  hiphop: [...hiphopSources],
+  'hip hop rap anthems': [...hiphopSources],
+  lofi: [...lofiSources],
+  'lofi chill beats': [...lofiSources],
+  edm: [...edmSources],
+  'edm dance festival hits': [...edmSources],
+  rnb: [...rnbSources],
+  'rnb soul grooves': [...rnbSources],
+  jazz: [...jazzSources],
+  'jazz soul lounge': [...jazzSources],
+  workout: [...workoutSources],
+  'workout motivation hits': [...workoutSources],
+  acoustic: [...acousticSources],
+  'acoustic chill singer songwriter': [...acousticSources],
 };
 
 function formatDuration(seconds) {
@@ -259,12 +346,16 @@ async function getEditorialPlaylistTracks(sources = [], page = 0, limit = 12) {
 }
 
 export async function getJioSaavnTrendingTracks(seed = 'trending hits', page = 0, limit = 12) {
-  const sources = EDITORIAL_TRENDING_SOURCES[seed] || EDITORIAL_TRENDING_SOURCES['featured pop'];
+  return getJioSaavnDiscoveryTracks(seed, page, limit);
+}
+
+export async function getJioSaavnDiscoveryTracks(key = 'featured pop', page = 0, limit = 12) {
+  const sources = EDITORIAL_DISCOVERY_SOURCES[key];
   const editorialTracks = await getEditorialPlaylistTracks(sources, page, limit);
 
   if (editorialTracks.length > 0) {
     return editorialTracks;
   }
 
-  return searchJioSaavnTracks(seed, page, limit);
+  return searchJioSaavnTracks(key, page, limit);
 }

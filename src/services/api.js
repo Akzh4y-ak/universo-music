@@ -1,5 +1,9 @@
 import { getMusicProviderInfo } from '../config/music';
-import { searchJioSaavnTracks, getJioSaavnTrendingTracks } from './providers/jiosaavn';
+import {
+  searchJioSaavnTracks,
+  getJioSaavnDiscoveryTracks,
+  getJioSaavnTrendingTracks,
+} from './providers/jiosaavn';
 
 export function getCatalogStatus() {
   return getMusicProviderInfo();
@@ -35,9 +39,21 @@ export async function searchTracks(query, limit = 24, page = 0) {
   return merged.slice(0, limit);
 }
 
-export async function getTrendingTracks(seed = 'pop hits', limit = 12, page = 0) {
-  const saavnResults = await getJioSaavnTrendingTracks(seed, page, Math.min(limit, 50)).catch(() => []);
+export async function getDiscoveryTracks(key = 'featured pop', limit = 24, page = 0) {
+  if (!key) {
+    return [];
+  }
+
+  const saavnResults = await getJioSaavnDiscoveryTracks(key, page, Math.min(limit, 50)).catch(() => []);
 
   const merged = deduplicateTracks(saavnResults);
   return merged.slice(0, limit);
+}
+
+export async function getTrendingTracks(seed = 'pop hits', limit = 12, page = 0) {
+  return getDiscoveryTracks(seed, limit, page).catch(async () => {
+    const saavnResults = await getJioSaavnTrendingTracks(seed, page, Math.min(limit, 50)).catch(() => []);
+    const merged = deduplicateTracks(saavnResults);
+    return merged.slice(0, limit);
+  });
 }

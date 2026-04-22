@@ -5,7 +5,7 @@ import CatalogFeedback from '../components/shared/CatalogFeedback';
 import TrackGrid from '../components/shared/TrackGrid';
 import { getGenreById, genres } from '../data/genres';
 import { useMusic } from '../context/music';
-import { searchTracks } from '../services/api';
+import { getDiscoveryTracks } from '../services/api';
 import TrackCard from '../components/shared/TrackCard';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import { filterExplicitTracks } from '../utils/catalog';
@@ -21,6 +21,7 @@ const GenrePage = () => {
   const { preferences } = useMusic();
   
   const genre = getGenreById(id) || genres[0];
+  const genreDiscoveryKey = genre.id || genre.query || genre.title;
   
   useEffect(() => {
     let cancelled = false;
@@ -32,7 +33,7 @@ const GenrePage = () => {
       setHasMore(true);
 
       try {
-        const results = await searchTracks(genre.query || genre.title, 50, 0);
+        const results = await getDiscoveryTracks(genreDiscoveryKey, 50, 0);
 
         if (cancelled) {
           return;
@@ -61,7 +62,7 @@ const GenrePage = () => {
     return () => {
       cancelled = true;
     };
-  }, [genre.id, genre.query, genre.title]);
+  }, [genre.id, genre.title, genreDiscoveryKey]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore) return;
@@ -70,7 +71,7 @@ const GenrePage = () => {
     const nextPage = page + 1;
 
     try {
-      const results = await searchTracks(genre.query || genre.title, 50, nextPage);
+      const results = await getDiscoveryTracks(genreDiscoveryKey, 50, nextPage);
       
       if (results.length === 0) {
         setHasMore(false);
