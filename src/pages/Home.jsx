@@ -14,13 +14,11 @@ import { useMusic } from '../context/music';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { filterExplicitTracks } from '../utils/catalog';
 
+import OnboardingOverlay from '../components/shared/OnboardingOverlay';
+
 const Home = () => {
+  const [dynamicSections, setDynamicSections] = useState([]);
   const [trending, setTrending] = useState([]);
-  const [hindiHits, setHindiHits] = useState([]);
-  const [punjabiEnergy, setPunjabiEnergy] = useState([]);
-  const [tamilEssentials, setTamilEssentials] = useState([]);
-  const [teluguTrending, setTeluguTrending] = useState([]);
-  const [englishPop, setEnglishPop] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { likedSongs, playlists, recentPlays, setActivePlaylistId, preferences } = useMusic();
@@ -40,41 +38,34 @@ const Home = () => {
       setError('');
 
       try {
-        const [trendingResults, hindiResults, punjabiResults, tamilResults, teluguResults, englishResults] = await Promise.all([
-          getTrendingTracks('featured pop', 30),
-          getDiscoveryTracks('hindi', 18),
-          getDiscoveryTracks('punjabi', 12),
-          getDiscoveryTracks('tamil', 18),
-          getDiscoveryTracks('telugu', 12),
-          getDiscoveryTracks('english', 12),
-        ]);
+        // Always fetch global trending
+        const trendingPromise = getTrendingTracks('featured pop', 30);
+        
+        // Dynamic requests based on preferences
+        const preferredLangs = preferences.preferredLanguages.length > 0 
+          ? preferences.preferredLanguages 
+          : ['hindi', 'english', 'punjabi']; // Defaults if none set
+        
+        const langPromises = preferredLangs.map(lang => getDiscoveryTracks(lang, 12));
+        
+        const results = await Promise.all([trendingPromise, ...langPromises]);
 
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
 
-        setTrending(trendingResults);
-        setHindiHits(hindiResults);
-        setPunjabiEnergy(punjabiResults);
-        setTamilEssentials(tamilResults);
-        setTeluguTrending(teluguResults);
-        setEnglishPop(englishResults);
+        setTrending(results[0]);
+        
+        const sections = preferredLangs.map((lang, index) => ({
+          id: lang,
+          title: `${lang.charAt(0).toUpperCase() + lang.slice(1)} Hits`,
+          tracks: results[index + 1] || []
+        }));
+        
+        setDynamicSections(sections);
       } catch (nextError) {
-        if (cancelled) {
-          return;
-        }
-
-        setTrending([]);
-        setHindiHits([]);
-        setPunjabiEnergy([]);
-        setTamilEssentials([]);
-        setTeluguTrending([]);
-        setEnglishPop([]);
+        if (cancelled) return;
         setError(nextError.message || 'Unable to load music right now.');
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     };
 
@@ -83,7 +74,7 @@ const Home = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [preferences.preferredLanguages]);
 
   const personalizedRecent = useMemo(() => {
     return filterExplicitTracks(recentPlays, preferences.allowExplicit).slice(0, 6);
@@ -103,25 +94,12 @@ const Home = () => {
     return filterExplicitTracks(trending, preferences.allowExplicit);
   }, [preferences.allowExplicit, trending]);
 
-  const visibleHindiHits = useMemo(() => {
-    return filterExplicitTracks(hindiHits, preferences.allowExplicit);
-  }, [hindiHits, preferences.allowExplicit]);
-
-  const visiblePunjabiEnergy = useMemo(() => {
-    return filterExplicitTracks(punjabiEnergy, preferences.allowExplicit);
-  }, [preferences.allowExplicit, punjabiEnergy]);
-
-  const visibleTamilEssentials = useMemo(() => {
-    return filterExplicitTracks(tamilEssentials, preferences.allowExplicit);
-  }, [preferences.allowExplicit, tamilEssentials]);
-
-  const visibleTeluguTrending = useMemo(() => {
-    return filterExplicitTracks(teluguTrending, preferences.allowExplicit);
-  }, [preferences.allowExplicit, teluguTrending]);
-
-  const visibleEnglishPop = useMemo(() => {
-    return filterExplicitTracks(englishPop, preferences.allowExplicit);
-  }, [englishPop, preferences.allowExplicit]);
+  const visibleDynamicSections = useMemo(() => {
+    return dynamicSections.map(section => ({
+      ...section,
+      visibleTracks: filterExplicitTracks(section.tracks, preferences.allowExplicit)
+    }));
+  }, [dynamicSections, preferences.allowExplicit]);
 
   const renderSkeletons = () => (
     <TrackGrid>
@@ -385,100 +363,35 @@ const Home = () => {
         </div>
       </section>
 
-      <HorizontalSection 
-        title="Hindi Hits" 
-        subtitle="Bollywood leaders and chart staples"
-        to="/genre/hindi"
-      >
-        {renderHorizontalLane(
-          visibleHindiHits,
-          hindiHits,
-          'Hindi Hits',
-          'This Hindi lane came back empty. Try the dedicated genre page instead.',
-          '/genre/hindi',
-        )}
-      </HorizontalSection>
-
-      <HorizontalSection 
-        title="Punjabi Energy" 
-        subtitle="Bhangra drive and crossover anthems"
-        to="/genre/punjabi"
-      >
-        {renderHorizontalLane(
-          visiblePunjabiEnergy,
-          punjabiEnergy,
-          'Punjabi Energy',
-          'This Punjabi lane came back empty. Try the dedicated genre page instead.',
-          '/genre/punjabi',
-        )}
-      </HorizontalSection>
-
-      <HorizontalSection 
-        title="Tamil Essentials" 
-        subtitle="Kollywood favorites"
-        to="/genre/tamil"
-      >
-        {renderHorizontalLane(
-          visibleTamilEssentials,
-          tamilEssentials,
-          'Tamil Essentials',
-          'This Tamil lane came back empty. Try the dedicated genre page instead.',
-          '/genre/tamil',
-        )}
-      </HorizontalSection>
+      {visibleDynamicSections.map((section) => (
+         <HorizontalSection
+           key={section.id}
+           title={section.title}
+           subtitle={`Top tracks in ${section.id}`}
+           to={`/genre/${section.id}`}
+         >
+           {renderHorizontalLane(
+             section.visibleTracks,
+             section.tracks,
+             section.title,
+             `This ${section.id} lane came back empty. Try the dedicated genre page instead.`,
+             `/genre/${section.id}`,
+           )}
+         </HorizontalSection>
+       ))}
 
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <Link to="/genre/telugu" className="text-2xl font-bold transition-colors hover:text-brand">
-            Telugu Trending
+          <Link to="/playlists" className="text-2xl font-bold transition-colors hover:text-brand">
+            Featured Mixes
           </Link>
-          <Link to="/genre/telugu" className="text-sm font-bold text-text-subdued uppercase tracking-wider transition-colors hover:text-white">
-            Open genre
-          </Link>
+          <span className="text-sm font-bold text-text-subdued uppercase tracking-wider">Live + local</span>
         </div>
-        {loading ? renderSkeletons() : visibleTeluguTrending.length === 0 ? (
-          <CatalogFeedback
-            title="No Telugu picks yet"
-            message={teluguTrending.length > 0 && !preferences.allowExplicit
-              ? 'This Telugu lane has results, but they are hidden by your explicit-content setting.'
-              : 'This Telugu lane came back empty. Try the dedicated genre page instead.'}
-            actionLabel={teluguTrending.length > 0 && !preferences.allowExplicit ? 'Open settings' : 'Browse Telugu'}
-            actionTo={teluguTrending.length > 0 && !preferences.allowExplicit ? '/settings' : '/genre/telugu'}
-          />
-        ) : (
-          <TrackGrid>
-            {visibleTeluguTrending.map((track, index) => (
-              <TrackCard key={track.id} track={track} queueContext={visibleTeluguTrending} queueIndex={index} />
-            ))}
-          </TrackGrid>
-        )}
-      </section>
-
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <Link to="/genre/english" className="text-2xl font-bold transition-colors hover:text-brand">
-            English Pop
-          </Link>
-          <Link to="/genre/english" className="text-sm font-bold text-text-subdued uppercase tracking-wider transition-colors hover:text-white">
-            Open genre
-          </Link>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {featuredPlaylists.map((playlist) => (
+            <PlaylistCard key={playlist.id} playlist={playlist} />
+          ))}
         </div>
-        {loading ? renderSkeletons() : visibleEnglishPop.length === 0 ? (
-          <CatalogFeedback
-            title="No English pop picks yet"
-            message={englishPop.length > 0 && !preferences.allowExplicit
-              ? 'This English pop lane has results, but they are hidden by your explicit-content setting.'
-              : 'This English pop lane came back empty. Try the genre page or live search.'}
-            actionLabel={englishPop.length > 0 && !preferences.allowExplicit ? 'Open settings' : 'Browse Pop'}
-            actionTo={englishPop.length > 0 && !preferences.allowExplicit ? '/settings' : '/genre/english'}
-          />
-        ) : (
-          <TrackGrid>
-            {visibleEnglishPop.map((track, index) => (
-              <TrackCard key={track.id} track={track} queueContext={visibleEnglishPop} queueIndex={index} />
-            ))}
-          </TrackGrid>
-        )}
       </section>
 
       <section className="w-full mt-4 mb-4">
@@ -500,7 +413,9 @@ const Home = () => {
         </div>
       </section>
 
+      <OnboardingOverlay />
     </div>
+
   );
 };
 

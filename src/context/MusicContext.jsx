@@ -5,6 +5,10 @@ import { readStoredJson, readStoredString } from '../utils/storage';
 
 const defaultPreferences = {
   allowExplicit: true,
+  preferredLanguages: [],
+  preferredGenres: [],
+  preferredArtists: [],
+  hasSetPreferences: false,
 };
 
 function ensureTrackList(value) {
@@ -225,6 +229,14 @@ export const MusicProvider = ({ children }) => {
     }));
   };
 
+  const updatePreferences = (updates) => {
+    setPreferences((previous) => ({
+      ...previous,
+      ...updates,
+      hasSetPreferences: true,
+    }));
+  };
+
   const getLibrarySnapshot = () => {
     return {
       version: 1,
@@ -316,6 +328,7 @@ export const MusicProvider = ({ children }) => {
     saveTrackToPlaylist,
     preferences,
     setAllowExplicit,
+    updatePreferences,
     getLibrarySnapshot,
     importLibrarySnapshot,
   };

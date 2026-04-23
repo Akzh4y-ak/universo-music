@@ -1,7 +1,8 @@
-import { Clock3, ShieldCheck, SlidersHorizontal, Volume2 } from 'lucide-react';
+import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
+import { LANGUAGES, GENRES } from '../data/preferences';
 
 const timerOptions = [15, 30, 45, 60];
 
@@ -25,6 +26,7 @@ const SettingsPage = () => {
     recentPlays,
     clearRecentPlays,
     setAllowExplicit,
+    updatePreferences,
   } = useMusic();
   const {
     autoAdvance,
@@ -172,25 +174,70 @@ const SettingsPage = () => {
             </div>
 
             <div className="space-y-5">
-              <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/8 bg-black/20 p-4">
-                <div>
-                  <p className="text-sm font-semibold text-white">Allow explicit content</p>
-                  <p className="text-xs leading-5 text-text-subdued">When off, explicit tracks are filtered out across discovery and saved library views.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setAllowExplicit(!preferences.allowExplicit)}
-                  className={`inline-flex h-8 w-14 items-center rounded-full p-1 transition-colors ${
-                    preferences.allowExplicit ? 'bg-brand' : 'bg-white/10'
-                  }`}
-                  aria-pressed={preferences.allowExplicit}
-                >
-                  <span
-                    className={`h-6 w-6 rounded-full bg-white transition-transform ${
-                      preferences.allowExplicit ? 'translate-x-6' : 'translate-x-0'
-                    }`}
-                  />
                 </button>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-black/20 p-4">
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-white">Preferred Languages</p>
+                  <p className="text-xs leading-5 text-text-subdued">Choose which languages you'd like to see on your home feed.</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {LANGUAGES.map(lang => {
+                    const isSelected = preferences.preferredLanguages.includes(lang.id);
+                    return (
+                      <button
+                        key={lang.id}
+                        onClick={() => {
+                          const next = isSelected 
+                            ? preferences.preferredLanguages.filter(id => id !== lang.id)
+                            : [...preferences.preferredLanguages, lang.id];
+                          updatePreferences({ preferredLanguages: next });
+                        }}
+                        className={`flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-all ${
+                          isSelected 
+                            ? 'bg-brand/20 border-brand text-white' 
+                            : 'bg-white/5 border-white/10 text-text-muted hover:bg-white/10'
+                        }`}
+                      >
+                        <span>{lang.flag}</span>
+                        <span>{lang.label}</span>
+                        {isSelected && <Check className="h-3 w-3 text-brand" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-black/20 p-4">
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-white">Preferred Genres</p>
+                  <p className="text-xs leading-5 text-text-subdued">Influence your recommendations by selecting vibes you enjoy.</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {GENRES.map(genre => {
+                    const isSelected = preferences.preferredGenres.includes(genre.id);
+                    return (
+                      <button
+                        key={genre.id}
+                        onClick={() => {
+                          const next = isSelected 
+                            ? preferences.preferredGenres.filter(id => id !== genre.id)
+                            : [...preferences.preferredGenres, genre.id];
+                          updatePreferences({ preferredGenres: next });
+                        }}
+                        className={`flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-all ${
+                          isSelected 
+                            ? 'bg-white text-black' 
+                            : 'bg-white/5 border-white/10 text-text-muted hover:bg-white/10'
+                        }`}
+                      >
+                        <span>{genre.label}</span>
+                        {isSelected && <Check className="h-3 w-3" />}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="rounded-2xl border border-white/8 bg-black/20 p-4">
