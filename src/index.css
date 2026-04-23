@@ -11,6 +11,8 @@
   --color-text-muted: #b3b3b3;
   --color-text-subdued: #a7a7a7;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --player-theme-color: #1ed760;
+  --player-theme-alpha: rgba(30, 215, 96, 0.4);
 }
 
 @layer base {

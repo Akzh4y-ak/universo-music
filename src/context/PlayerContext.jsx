@@ -3,6 +3,7 @@ import { getMusicProviderInfo } from '../config/music';
 import { searchTracks } from '../services/api';
 import { PlayerContext, PlayerProgressContext } from './player';
 import { readStoredJson, readStoredNumber, readStoredString } from '../utils/storage';
+import { getDominantColor } from '../utils/colors';
 
 function clearAudioSource(audio) {
   audio.pause();
@@ -59,6 +60,7 @@ export const PlayerProvider = ({ children }) => {
     isAuthorized: false,
     message: providerInfo.summary,
   });
+  const [themeColor, setThemeColor] = useState('rgb(18, 18, 18)');
 
   const audioRef = useRef(new Audio());
   const loadedTrackUrlRef = useRef('');
@@ -133,7 +135,20 @@ export const PlayerProvider = ({ children }) => {
     loadedTrackUrlRef.current = nextTrackUrl;
     audio.src = nextTrackUrl;
     audio.load();
-  }, [currentTrack?.url]);
+
+    // Extract dominant color from artwork
+    if (currentTrack?.cover || currentTrack?.image) {
+      getDominantColor(currentTrack.cover || currentTrack.image).then(color => {
+        setThemeColor(color);
+        document.documentElement.style.setProperty('--player-theme-color', color);
+        document.documentElement.style.setProperty('--player-theme-alpha', color.replace('rgb', 'rgba').replace(')', ', 0.4)'));
+      });
+    } else {
+      setThemeColor('rgb(30, 215, 96)');
+      document.documentElement.style.setProperty('--player-theme-color', 'rgb(30, 215, 96)');
+      document.documentElement.style.setProperty('--player-theme-alpha', 'rgba(30, 215, 96, 0.4)');
+    }
+  }, [currentTrack]);
 
   useEffect(() => {
     if (!sleepTimerEndsAt) {
@@ -654,6 +669,7 @@ export const PlayerProvider = ({ children }) => {
     isRadioLoading,
     radioError,
     providerStatus,
+    themeColor,
   };
 
   const progressValue = useMemo(() => ({

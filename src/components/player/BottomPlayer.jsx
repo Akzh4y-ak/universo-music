@@ -64,12 +64,18 @@ const BottomPlayer = () => {
   const showAlbumLink = Boolean(currentTrack.album && albumSlug);
 
   return (
-    <div className="glass-panel relative mx-2 h-16 w-[calc(100%-16px)] rounded-2xl border border-white/10 px-3 py-2 shadow-[0_12px_32px_rgba(0,0,0,0.5)] md:static md:mx-0 md:h-auto md:w-full md:rounded-none md:border-x-0 md:border-t md:px-6 md:py-3">
+  return (
+    <div 
+      className="glass-panel relative mx-2 h-16 w-[calc(100%-16px)] rounded-2xl border border-white/10 px-3 py-2 md:static md:mx-0 md:h-auto md:w-full md:rounded-none md:border-x-0 md:border-t md:px-6 md:py-3 transition-all duration-1000"
+      style={{
+        boxShadow: `0 8px 32px rgba(0,0,0,0.5), 0 -4px 20px var(--player-theme-alpha)`
+      }}
+    >
       {/* Mobile-only Progress Bar at the Top */}
       <div className="absolute -top-[1px] left-4 right-4 h-[2px] overflow-hidden rounded-full bg-white/5 md:hidden">
         <div 
-            className="h-full bg-white/60 transition-all duration-300" 
-            style={{ width: progressWidth }} 
+            className="h-full transition-all duration-500" 
+            style={{ width: progressWidth, backgroundColor: 'var(--player-theme-color)' }} 
         />
       </div>
 
@@ -173,7 +179,8 @@ const BottomPlayer = () => {
 
             <button
               onClick={togglePlay}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all hover:scale-105"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-all hover:scale-105"
+              style={{ boxShadow: `0 0 15px var(--player-theme-alpha)` }}
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5 fill-current" />
@@ -213,8 +220,8 @@ const BottomPlayer = () => {
                 className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
               />
               <div
-                className="absolute left-0 h-full rounded-full bg-white transition-colors ease-linear group-hover:bg-brand"
-                style={{ width: progressWidth }}
+                className="absolute left-0 h-full rounded-full transition-all ease-linear"
+                style={{ width: progressWidth, backgroundColor: 'var(--player-theme-color)' }}
               />
               <div
                 className="pointer-events-none absolute h-3 w-3 rounded-full bg-white opacity-0 shadow-md transition-opacity group-hover:opacity-100"

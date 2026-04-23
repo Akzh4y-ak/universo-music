@@ -67,7 +67,23 @@ const NowPlayingPage = () => {
   const albumSlug = getTrackAlbumSlug(currentTrack);
 
   return (
-    <div className="immersive-gradient fixed inset-0 z-50 flex flex-col overflow-hidden text-white sm:static sm:h-full sm:rounded-[32px] sm:border sm:border-white/10 sm:shadow-2xl">
+    <div 
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden text-white sm:static sm:h-full sm:rounded-[32px] sm:border sm:border-white/10 sm:shadow-2xl transition-colors duration-1000"
+      style={{
+        background: `radial-gradient(circle at 50% 30%, var(--player-theme-alpha) 0%, rgba(0,0,0,1) 85%)`
+      }}
+    >
+      {/* Dynamic Background Accents */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div 
+          className="absolute -left-[10%] -top-[10%] h-[50%] w-[50%] rounded-full opacity-30 blur-[120px] transition-colors duration-1000"
+          style={{ backgroundColor: 'var(--player-theme-color)' }}
+        />
+        <div 
+          className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full opacity-20 blur-[120px] transition-colors duration-1000"
+          style={{ backgroundColor: 'var(--player-theme-color)' }}
+        />
+      </div>
       <Helmet>
         <title>Now Playing - {currentTrack.title}</title>
       </Helmet>
@@ -95,8 +111,11 @@ const NowPlayingPage = () => {
       {/* Main Content Area: Centered Artwork */}
       <main className="flex flex-1 flex-col items-center justify-center px-8">
         <div className="relative group w-full max-w-[280px] sm:max-w-[400px]">
-          <div className="absolute -inset-4 rounded-full bg-brand/20 blur-3xl opacity-50 transition-opacity duration-1000 group-hover:opacity-80" />
-          <div className={`relative aspect-square w-full rounded-full border-4 border-white/10 bg-bg-surface p-1 shadow-[0_20px_60px_rgba(0,0,0,0.6)] ${isPlaying ? 'animate-rotate' : 'animate-rotate animate-rotate-paused'}`}>
+          <div 
+            className="absolute -inset-10 rounded-full blur-[80px] opacity-40 transition-all duration-1000 group-hover:opacity-60" 
+            style={{ backgroundColor: 'var(--player-theme-color)' }}
+          />
+          <div className={`relative aspect-square w-full rounded-full border-[10px] border-white/5 bg-black/60 p-1 shadow-[0_30px_90px_rgba(0,0,0,0.8)] transition-transform duration-500 scale-95 group-hover:scale-100 ${isPlaying ? 'animate-rotate' : 'animate-rotate animate-rotate-paused'}`}>
             <img
               src={currentTrack.cover}
               alt={currentTrack.title}
@@ -144,8 +163,8 @@ const NowPlayingPage = () => {
               className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
             />
             <div
-              className="absolute left-0 h-full rounded-full bg-white group-hover:bg-brand"
-              style={{ width: `${progressPct}%` }}
+              className="absolute left-0 h-full rounded-full bg-white group-hover:opacity-80"
+              style={{ width: `${progressPct}%`, backgroundColor: 'var(--player-theme-color)' }}
             />
             <div
               className="pointer-events-none absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100"
@@ -177,12 +196,13 @@ const NowPlayingPage = () => {
 
             <button
               onClick={togglePlay}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.25)] transition-transform active:scale-95"
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-black shadow-[0_15px_45px_rgba(0,0,0,0.5)] transition-all hover:scale-110 active:scale-95"
+              style={{ boxShadow: `0 15px 45px var(--player-theme-alpha)` }}
             >
               {isPlaying ? (
-                <Pause className="h-8 w-8 fill-current" />
+                <Pause className="h-10 w-10 fill-current" />
               ) : (
-                <Play className="ml-1 h-8 w-8 fill-current" />
+                <Play className="ml-1 h-10 w-10 fill-current" />
               )}
             </button>
 
