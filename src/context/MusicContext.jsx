@@ -229,6 +229,8 @@ export const MusicProvider = ({ children }) => {
     }));
   };
 
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
   const updatePreferences = (updates) => {
     setPreferences((previous) => ({
       ...previous,
@@ -329,6 +331,8 @@ export const MusicProvider = ({ children }) => {
     preferences,
     setAllowExplicit,
     updatePreferences,
+    isFeedbackOpen,
+    setIsFeedbackOpen,
     getLibrarySnapshot,
     importLibrarySnapshot,
   };

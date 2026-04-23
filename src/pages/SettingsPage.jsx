@@ -1,4 +1,4 @@
-import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check } from 'lucide-react';
+import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check, MessageSquare } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
@@ -27,6 +27,7 @@ const SettingsPage = () => {
     clearRecentPlays,
     setAllowExplicit,
     updatePreferences,
+    setIsFeedbackOpen,
   } = useMusic();
   const {
     autoAdvance,
@@ -314,6 +315,21 @@ const SettingsPage = () => {
               <div className="rounded-2xl border border-white/8 bg-black/20 p-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-text-subdued">Keyboard Shortcuts</p>
                 <p className="mt-2 leading-6">Space toggles play/pause, left and right arrows skip tracks, and <span className="font-semibold text-white">Q</span> opens the queue.</p>
+              </div>
+            </div>
+          </div>
+
+          <div 
+            onClick={() => setIsFeedbackOpen(true)}
+            className="group cursor-pointer rounded-2xl border border-white/8 bg-gradient-to-br from-brand/10 to-transparent p-6 transition-all hover:bg-white/10"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/20 text-brand">
+                <MessageSquare className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white group-hover:text-brand">Help us improve</h3>
+                <p className="text-xs text-text-subdued">Send suggestions or bug reports to the team.</p>
               </div>
             </div>
           </div>

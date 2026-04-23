@@ -7,9 +7,12 @@ import MobileBottomNav from './MobileBottomNav';
 import ScrollToTop from '../shared/ScrollToTop';
 import NavigationProgressBar from '../shared/NavigationProgressBar';
 import OnboardingOverlay from '../shared/OnboardingOverlay';
+import FeedbackModal from '../shared/FeedbackModal';
+import { useMusic } from '../../context/music';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 
 const Layout = () => {
+  const { isFeedbackOpen, setIsFeedbackOpen } = useMusic();
   const location = useLocation();
   useKeyboardShortcuts();
 
@@ -63,6 +66,12 @@ const Layout = () => {
 
       {/* Global Onboarding Selection */}
       <OnboardingOverlay />
+
+      {/* Feedback System */}
+      <FeedbackModal 
+        isOpen={isFeedbackOpen} 
+        onClose={() => setIsFeedbackOpen(false)} 
+      />
     </div>
   );
 };

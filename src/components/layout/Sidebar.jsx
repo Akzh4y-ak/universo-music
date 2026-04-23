@@ -1,6 +1,7 @@
 import { NavLink, Link } from 'react-router-dom';
-import { Home, Compass, Heart, Clock, Search, Library, Music2, Disc3, SlidersHorizontal, Maximize2, Minimize2 } from 'lucide-react';
+import { Home, Compass, Heart, Clock, Search, Library, Music2, Disc3, SlidersHorizontal, Maximize2, Minimize2, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useMusic } from '../../context/music';
 import { featuredGenreIds, genres } from '../../data/genres';
 import { getCatalogStatus } from '../../services/api';
 
@@ -51,6 +52,7 @@ const SidebarNavItem = ({ icon, label, to }) => {
 };
 
 const Sidebar = ({ className = '' }) => {
+  const { setIsFeedbackOpen } = useMusic();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -125,6 +127,16 @@ const Sidebar = ({ className = '' }) => {
             </NavLink>
           ))}
         </div>
+      </div>
+
+      <div className="px-3 pb-2">
+        <button
+          onClick={() => setIsFeedbackOpen(true)}
+          className="flex w-full items-center gap-4 rounded-lg px-4 py-3 text-text-muted transition-all duration-300 hover:bg-white/5 hover:text-white"
+        >
+          <MessageSquare className="h-6 w-6" />
+          <span className="text-sm tracking-wide">Send Feedback</span>
+        </button>
       </div>
 
       <div className="m-3 flex flex-col gap-3 rounded-2xl border border-white/8 bg-bg-highlight/40 p-4 backdrop-blur-md">
