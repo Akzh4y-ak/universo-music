@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Heart, Clock, Library, SlidersHorizontal, Settings } from 'lucide-react';
+import { Heart, Clock, Library, SlidersHorizontal, Settings, MessageSquare } from 'lucide-react';
 import { useMusic } from '../context/music';
 
 const LibraryPage = () => {
-  const { likedSongs, playlists, recentPlays } = useMusic();
+  const { likedSongs, playlists, recentPlays, setIsFeedbackOpen } = useMusic();
 
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-8">
@@ -91,6 +91,16 @@ const LibraryPage = () => {
                 <Library className="h-5 w-5" />
             </div>
             <span className="font-semibold">Add artists</span>
+         </button>
+         
+         <button 
+           onClick={() => setIsFeedbackOpen(true)}
+           className="flex items-center gap-4 text-text-muted hover:text-white transition-colors"
+         >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+                <MessageSquare className="h-5 w-5" />
+            </div>
+            <span className="font-semibold">Send Feedback</span>
          </button>
       </div>
     </div>
