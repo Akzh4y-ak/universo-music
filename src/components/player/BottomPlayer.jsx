@@ -64,14 +64,15 @@ const BottomPlayer = () => {
   const showAlbumLink = Boolean(currentTrack.album && albumSlug);
 
   return (
-    <div className="glass-panel relative w-full border-t border-white/8 px-4 py-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] md:px-6 md:rounded-none md:border-x-0 md:mx-0 rounded-xl mx-0 md:static">
+    <div className="glass-panel relative mx-2 h-16 w-[calc(100%-16px)] rounded-2xl border border-white/10 px-3 py-2 shadow-[0_12px_32px_rgba(0,0,0,0.5)] md:static md:mx-0 md:h-auto md:w-full md:rounded-none md:border-x-0 md:border-t md:px-6 md:py-3">
       {/* Mobile-only Progress Bar at the Top */}
-      <div className="absolute top-0 left-2 right-2 h-[2px] bg-white/10 md:hidden overflow-hidden rounded-full">
+      <div className="absolute -top-[1px] left-4 right-4 h-[2px] overflow-hidden rounded-full bg-white/5 md:hidden">
         <div 
-            className="h-full bg-white transition-all duration-300" 
+            className="h-full bg-white/60 transition-all duration-300" 
             style={{ width: progressWidth }} 
         />
       </div>
+
 
       <div className="flex items-center justify-between md:grid md:gap-3 md:grid-cols-[minmax(220px,1fr)_minmax(320px,1.2fr)_minmax(180px,0.8fr)] md:items-center">
         <div className="flex min-w-0 flex-1 md:flex-none items-center gap-3 pr-2 md:pr-0">

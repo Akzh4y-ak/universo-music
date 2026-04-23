@@ -20,7 +20,7 @@ const Layout = () => {
       {/* Scroll restoration logic */}
       <ScrollToTop />
       
-      <div className="flex min-h-screen flex-1 overflow-hidden pb-36 md:pb-28">
+      <div className="flex min-h-screen flex-1 overflow-hidden pb-44 md:pb-28">
         {/* Desktop Sidebar */}
         <Sidebar className="hidden md:flex" />
 
@@ -52,9 +52,10 @@ const Layout = () => {
       <MobileBottomNav />
 
       {/* Persistent Global Player */}
-      <div className="fixed bottom-16 md:bottom-0 inset-x-0 z-[49] md:z-50">
+      <div className="fixed bottom-20 md:bottom-0 inset-x-0 z-[49] md:z-50">
         <BottomPlayer />
       </div>
+
 
       {/* Slide-out Queue Panel */}
       <QueuePanel />
