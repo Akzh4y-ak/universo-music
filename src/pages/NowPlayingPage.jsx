@@ -38,6 +38,7 @@ const NowPlayingPage = () => {
     shuffleEnabled,
     togglePlay,
     toggleShuffle,
+    toggleQueue,
   } = usePlayer();
   
   const { duration, progress, seekTo } = usePlayerProgress();
@@ -83,7 +84,10 @@ const NowPlayingPage = () => {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-subdued">Now Playing</p>
           <p className="text-xs font-semibold text-white/90">{currentTrack.album || 'Unknown Album'}</p>
         </div>
-        <button className="rounded-full bg-white/5 p-2 transition-colors hover:bg-white/10">
+        <button 
+          onClick={toggleQueue}
+          className="rounded-full bg-white/5 p-2 transition-colors hover:bg-white/10"
+        >
           <MoreHorizontal className="h-6 w-6" />
         </button>
       </header>
