@@ -64,7 +64,6 @@ const BottomPlayer = () => {
   const showAlbumLink = Boolean(currentTrack.album && albumSlug);
 
   return (
-  return (
     <div 
       className="glass-panel relative mx-2 h-16 w-[calc(100%-16px)] rounded-2xl border border-white/10 px-3 py-2 md:static md:mx-0 md:h-auto md:w-full md:rounded-none md:border-x-0 md:border-t md:px-6 md:py-3 transition-all duration-1000"
       style={{
