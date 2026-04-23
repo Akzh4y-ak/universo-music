@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Compass, Headphones, Sparkles, TrendingUp } from 'lucide-react';
+import { Compass, Headphones, Sparkles, TrendingUp, Maximize2, Minimize2 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
-import { getDiscoveryTracks, getTrendingTracks } from '../services/api';
+import { getDiscoveryTracks, getTrendingTracks, searchTracks } from '../services/api';
 import PlaylistCard from '../components/shared/PlaylistCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -20,6 +20,22 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { likedSongs, playlists, recentPlays, setActivePlaylistId, preferences } = useMusic();
+  const [discoveryMix, setDiscoveryMix] = useState([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(e => console.error(e));
+    } else {
+      document.exitFullscreen();
+    }
+  };
   
   const greeting = () => {
     const hour = new Date().getHours();
@@ -36,27 +52,45 @@ const Home = () => {
       setError('');
 
       try {
-        // Always fetch global trending
         const trendingPromise = getTrendingTracks('featured pop', 30);
         
-        // Dynamic requests based on preferences
         const preferredLangs = preferences.preferredLanguages.length > 0 
           ? preferences.preferredLanguages 
-          : ['hindi', 'english', 'punjabi']; // Defaults if none set
+          : ['hindi', 'english', 'punjabi'];
         
         const preferredGenres = preferences.preferredGenres.length > 0
           ? preferences.preferredGenres
           : ['pop', 'lo-fi'];
 
+        // Favorite artists from likes
+        const favoriteArtists = Array.from(new Set(likedSongs.map(s => s.artist))).slice(0, 3);
+        const artistSeeds = favoriteArtists.length > 0 ? favoriteArtists : ['Arijit Singh', 'Taylor Swift'];
+
         const langPromises = preferredLangs.map(lang => getDiscoveryTracks(lang, 12));
         const genrePromises = preferredGenres.map(genre => getDiscoveryTracks(genre, 12));
         
-        const results = await Promise.all([trendingPromise, ...langPromises, ...genrePromises]);
+        // Smart discovery based on random selection of preferences
+        const mixSeeds = [...preferredLangs, ...preferredGenres, ...artistSeeds]
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3);
+        const discoveryPromises = mixSeeds.map(seed => searchTracks(seed, 10));
+        
+        const results = await Promise.all([
+          trendingPromise, 
+          ...langPromises, 
+          ...genrePromises,
+          ...discoveryPromises
+        ]);
 
         if (cancelled) return;
 
         setTrending(results[0]);
         
+        // Combine mixed results
+        const startIndexMix = 1 + preferredLangs.length + preferredGenres.length;
+        const rawMix = results.slice(startIndexMix).flat().sort(() => 0.5 - Math.random());
+        setDiscoveryMix(rawMix);
+
         const langSections = preferredLangs.map((lang, index) => ({
           id: `lang-${lang}`,
           title: `${lang.charAt(0).toUpperCase() + lang.slice(1)} Hits`,
@@ -84,7 +118,7 @@ const Home = () => {
     return () => {
       cancelled = true;
     };
-  }, [preferences.preferredLanguages, preferences.preferredGenres]);
+  }, [preferences.preferredLanguages, preferences.preferredGenres, likedSongs.length]);
 
 
   const personalizedRecent = useMemo(() => {
@@ -111,6 +145,10 @@ const Home = () => {
       visibleTracks: filterExplicitTracks(section.tracks, preferences.allowExplicit)
     }));
   }, [dynamicSections, preferences.allowExplicit]);
+
+  const visibleDiscoveryMix = useMemo(() => {
+    return filterExplicitTracks(discoveryMix, preferences.allowExplicit);
+  }, [discoveryMix, preferences.allowExplicit]);
 
   const renderSkeletons = () => (
     <TrackGrid>
@@ -185,19 +223,23 @@ const Home = () => {
           </div>
 
           <div className="hidden flex-col gap-3 sm:flex-row xl:flex-col xl:w-[340px] shrink-0 md:flex">
-            <div className="flex flex-1 items-start gap-4 rounded-xl border border-white/8 bg-white/5 p-4">
-              <TrendingUp className="h-6 w-6 shrink-0 text-brand" />
-              <div>
-                <p className="text-sm font-bold text-white">Trending</p>
-                <p className="mt-1 text-xs leading-5 text-text-subdued">Fast top-of-funnel discovery with queue-ready cards.</p>
+            <div className="m-3 flex flex-col gap-3 rounded-2xl border border-white/8 bg-bg-highlight/40 p-4 backdrop-blur-md">
+              <div className="space-y-2 text-xs text-text-subdued">
+                <p className="font-semibold uppercase tracking-[0.24em] text-brand">Playback Layer</p>
+                <p className="text-sm font-semibold text-white">Native Browser</p>
+                <p className="text-[11px] leading-5 opacity-80">Direct browser playback from a real catalog path.</p>
               </div>
-            </div>
-            <div className="flex flex-1 items-start gap-4 rounded-xl border border-white/8 bg-white/5 p-4">
-              <Headphones className="h-6 w-6 shrink-0 text-brand" />
-              <div>
-                <p className="text-sm font-bold text-white">No Login</p>
-                <p className="mt-1 text-xs leading-5 text-text-subdued">Direct browser playback from a real catalog path.</p>
-              </div>
+              
+              <button 
+                onClick={toggleFullscreen}
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-white/10 active:scale-95"
+              >
+                {isFullscreen ? (
+                  <><Minimize2 className="h-4 w-4" /> Exit Fullscreen</>
+                ) : (
+                  <><Maximize2 className="h-4 w-4" /> Native View</>
+                )}
+              </button>
             </div>
             <div className="flex flex-1 items-start gap-4 rounded-xl border border-white/8 bg-white/5 p-4">
               <Compass className="h-6 w-6 shrink-0 text-brand" />
@@ -210,6 +252,37 @@ const Home = () => {
         </div>
       </section>
 
+
+      {visibleDiscoveryMix.length > 0 ? (
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand/20 to-purple-500/10 p-1">
+          <div className="rounded-[22px] bg-bg-base/60 p-6 backdrop-blur-md">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="flex items-center gap-2 text-2xl font-black text-white">
+                  Made For You <Sparkles className="h-5 w-5 text-brand" />
+                </h2>
+                <p className="text-sm text-text-subdued">Your personal discovery mix, refreshed based on your taste.</p>
+              </div>
+              <button 
+                onClick={() => window.location.reload()}
+                className="text-xs font-bold uppercase tracking-widest text-brand hover:opacity-80"
+              >
+                Refresh Mix
+              </button>
+            </div>
+            <TrackGrid>
+              {visibleDiscoveryMix.map((track, index) => (
+                <TrackCard 
+                  key={`discovery-${track.id}-${index}`} 
+                  track={track} 
+                  queueContext={visibleDiscoveryMix} 
+                  queueIndex={index} 
+                />
+              ))}
+            </TrackGrid>
+          </div>
+        </section>
+      ) : null}
 
       {error ? (
         <CatalogFeedback

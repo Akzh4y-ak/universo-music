@@ -1,5 +1,6 @@
 import { NavLink, Link } from 'react-router-dom';
-import { Home, Compass, Heart, Clock, Search, Library, Music2, Disc3, SlidersHorizontal } from 'lucide-react';
+import { Home, Compass, Heart, Clock, Search, Library, Music2, Disc3, SlidersHorizontal, Maximize2, Minimize2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { featuredGenreIds, genres } from '../../data/genres';
 import { getCatalogStatus } from '../../services/api';
 
@@ -50,6 +51,22 @@ const SidebarNavItem = ({ icon, label, to }) => {
 };
 
 const Sidebar = ({ className = '' }) => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(e => console.error(e));
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   const catalogStatus = getCatalogStatus();
   const featuredGenres = featuredGenreIds
     .map((genreId) => genres.find((genre) => genre.id === genreId))
@@ -110,12 +127,23 @@ const Sidebar = ({ className = '' }) => {
         </div>
       </div>
 
-      <div className="m-3 rounded-2xl border border-white/8 bg-bg-highlight/40 p-4 backdrop-blur-md">
+      <div className="m-3 flex flex-col gap-3 rounded-2xl border border-white/8 bg-bg-highlight/40 p-4 backdrop-blur-md">
         <div className="space-y-2 text-xs text-text-subdued">
           <p className="font-semibold uppercase tracking-[0.24em] text-brand">Playback Layer</p>
           <p className="text-sm font-semibold text-white">{catalogStatus.label}</p>
           <p className="text-[11px] leading-5 opacity-80">{catalogStatus.summary}</p>
         </div>
+        
+        <button 
+          onClick={toggleFullscreen}
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-white/10 active:scale-95"
+        >
+          {isFullscreen ? (
+            <><Minimize2 className="h-4 w-4" /> Exit Fullscreen</>
+          ) : (
+            <><Maximize2 className="h-4 w-4" /> Native View</>
+          )}
+        </button>
       </div>
     </aside>
   );
