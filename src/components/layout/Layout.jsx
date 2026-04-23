@@ -4,7 +4,6 @@ import BottomPlayer from '../player/BottomPlayer';
 import QueuePanel from '../player/QueuePanel';
 import MobileHeader from './MobileHeader';
 import MobileBottomNav from './MobileBottomNav';
-import { filterExplicitTracks } from '../utils/catalog';
 import ScrollToTop from '../shared/ScrollToTop';
 import NavigationProgressBar from '../shared/NavigationProgressBar';
 import OnboardingOverlay from '../shared/OnboardingOverlay';

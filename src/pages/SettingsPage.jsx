@@ -174,6 +174,24 @@ const SettingsPage = () => {
             </div>
 
             <div className="space-y-5">
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-white/8 bg-black/20 p-4">
+                <div>
+                  <p className="text-sm font-semibold text-white">Allow explicit content</p>
+                  <p className="text-xs leading-5 text-text-subdued">When off, explicit tracks are filtered out across discovery and saved library views.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAllowExplicit(!preferences.allowExplicit)}
+                  className={`inline-flex h-8 w-14 items-center rounded-full p-1 transition-colors ${
+                    preferences.allowExplicit ? 'bg-brand' : 'bg-white/10'
+                  }`}
+                  aria-pressed={preferences.allowExplicit}
+                >
+                  <span
+                    className={`h-6 w-6 rounded-full bg-white transition-transform ${
+                      preferences.allowExplicit ? 'translate-x-6' : 'translate-x-0'
+                    }`}
+                  />
                 </button>
               </div>
 
