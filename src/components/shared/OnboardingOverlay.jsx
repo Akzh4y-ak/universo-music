@@ -25,10 +25,19 @@ const OnboardingOverlay = () => {
   };
 
   const handleFinish = () => {
-    updatePreferences({
-      preferredLanguages: selectedLangs,
-      preferredGenres: selectedGenres,
-    });
+    try {
+      updatePreferences({
+        preferredLanguages: selectedLangs,
+        preferredGenres: selectedGenres,
+        hasSetPreferences: true
+      });
+      // Small delay to ensure state is persisted before any re-render
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 100);
+    } catch (err) {
+      console.error("Failed to save preferences:", err);
+    }
   };
 
   return (

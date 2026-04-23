@@ -14,8 +14,6 @@ import { useMusic } from '../context/music';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { filterExplicitTracks } from '../utils/catalog';
 
-import OnboardingOverlay from '../components/shared/OnboardingOverlay';
-
 const Home = () => {
   const [dynamicSections, setDynamicSections] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -46,21 +44,33 @@ const Home = () => {
           ? preferences.preferredLanguages 
           : ['hindi', 'english', 'punjabi']; // Defaults if none set
         
+        const preferredGenres = preferences.preferredGenres.length > 0
+          ? preferences.preferredGenres
+          : ['pop', 'lo-fi'];
+
         const langPromises = preferredLangs.map(lang => getDiscoveryTracks(lang, 12));
+        const genrePromises = preferredGenres.map(genre => getDiscoveryTracks(genre, 12));
         
-        const results = await Promise.all([trendingPromise, ...langPromises]);
+        const results = await Promise.all([trendingPromise, ...langPromises, ...genrePromises]);
 
         if (cancelled) return;
 
         setTrending(results[0]);
         
-        const sections = preferredLangs.map((lang, index) => ({
-          id: lang,
+        const langSections = preferredLangs.map((lang, index) => ({
+          id: `lang-${lang}`,
           title: `${lang.charAt(0).toUpperCase() + lang.slice(1)} Hits`,
           tracks: results[index + 1] || []
         }));
+
+        const startIndexGenres = 1 + preferredLangs.length;
+        const genreSections = preferredGenres.map((genre, index) => ({
+          id: `genre-${genre}`,
+          title: `${genre.charAt(0).toUpperCase() + genre.slice(1)} Vibes`,
+          tracks: results[startIndexGenres + index] || []
+        }));
         
-        setDynamicSections(sections);
+        setDynamicSections([...langSections, ...genreSections]);
       } catch (nextError) {
         if (cancelled) return;
         setError(nextError.message || 'Unable to load music right now.');
@@ -74,7 +84,8 @@ const Home = () => {
     return () => {
       cancelled = true;
     };
-  }, [preferences.preferredLanguages]);
+  }, [preferences.preferredLanguages, preferences.preferredGenres]);
+
 
   const personalizedRecent = useMemo(() => {
     return filterExplicitTracks(recentPlays, preferences.allowExplicit).slice(0, 6);
@@ -349,20 +360,6 @@ const Home = () => {
         )}
       </section>
 
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <Link to="/playlists" className="text-2xl font-bold transition-colors hover:text-brand">
-            Featured Mixes
-          </Link>
-          <span className="text-sm font-bold text-text-subdued uppercase tracking-wider">Live + local</span>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {featuredPlaylists.map((playlist) => (
-            <PlaylistCard key={playlist.id} playlist={playlist} />
-          ))}
-        </div>
-      </section>
-
       {visibleDynamicSections.map((section) => (
          <HorizontalSection
            key={section.id}
@@ -413,8 +410,8 @@ const Home = () => {
         </div>
       </section>
 
-      <OnboardingOverlay />
     </div>
+
 
   );
 };
