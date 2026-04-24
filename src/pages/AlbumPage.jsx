@@ -131,6 +131,12 @@ const AlbumPage = () => {
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
         <title>{albumName || 'Collection'} - Univerzo Music</title>
+        <meta name="description" content={`Explore the ${albumName} collection on Univerzo Music. High-quality streaming, no sign-in required.`} />
+        <meta property="og:title" content={`${albumName} - Collection on Univerzo`} />
+        <meta property="og:description" content={`Listen to the ${albumName} collection by ${artistName} on Univerzo Music.`} />
+        {heroImage && <meta property="og:image" content={heroImage} />}
+        <meta property="og:type" content="music.album" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
 

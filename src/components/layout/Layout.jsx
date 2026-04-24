@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Sidebar from './Sidebar';
 import BottomPlayer from '../player/BottomPlayer';
 import QueuePanel from '../player/QueuePanel';
@@ -18,6 +19,9 @@ const Layout = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-bg-base text-text-base selection:bg-brand/30">
+      <Helmet>
+        <link rel="canonical" href={`${window.location.origin}${location.pathname}`} />
+      </Helmet>
       {/* Global SPA Progress Indicator */}
       <NavigationProgressBar />
       

@@ -122,6 +122,12 @@ const ArtistPage = () => {
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
         <title>{artistName} - Univerzo Music</title>
+        <meta name="description" content={`Listen to top tracks by ${artistName} on Univerzo Music. Discovery live hits and trending songs instantly.`} />
+        <meta property="og:title" content={`${artistName} - Artist on Univerzo`} />
+        <meta property="og:description" content={`Discover and play music from ${artistName} on Univerzo Music.`} />
+        {heroImage && <meta property="og:image" content={heroImage} />}
+        <meta property="og:type" content="music.playlist" />
+        <meta name="twitter:card" content="summary" />
       </Helmet>
 
 
