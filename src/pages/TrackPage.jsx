@@ -138,6 +138,48 @@ const TrackPage = () => {
         <meta property="og:image" content={track.cover} />
         <meta property="og:type" content="music.song" />
         <meta name="twitter:card" content="summary_large_image" />
+        
+        {/* JSON-LD Structured Data for MusicRecording */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MusicRecording",
+            "name": track.title,
+            "url": window.location.href,
+            "image": track.cover,
+            "datePublished": track.releaseDate,
+            "duration": `PT${Math.floor(track.durationSeconds / 60)}M${track.durationSeconds % 60}S`,
+            "byArtist": {
+              "@type": "MusicGroup",
+              "name": track.artist,
+              "url": `${window.location.origin}/artist/${track.artistSlug}`
+            },
+            "inAlbum": {
+              "@type": "MusicAlbum",
+              "name": track.album
+            },
+            "potentialAction": {
+              "@type": "ListenAction",
+              "target": [
+                {
+                  "@type": "EntryPoint",
+                  "urlTemplate": window.location.href,
+                  "actionPlatform": [
+                    "http://schema.org/DesktopWebPlatform",
+                    "http://schema.org/MobileWebPlatform",
+                    "http://schema.org/IOSPlatform",
+                    "http://schema.org/AndroidPlatform"
+                  ]
+                }
+              ],
+              "expectsAcceptanceOf": {
+                "@type": "Offer",
+                "category": "free",
+                "availability": "https://schema.org/InStock"
+              }
+            }
+          })}
+        </script>
       </Helmet>
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
