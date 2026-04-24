@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Compass, Headphones, Sparkles, TrendingUp, Maximize2, Minimize2 } from 'lucide-react';
+import { Compass, Headphones, Sparkles, TrendingUp, Maximize2, Minimize2, Settings2 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
@@ -10,6 +10,7 @@ import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import HomeRecentsGrid from '../components/shared/HomeRecentsGrid';
 import HorizontalSection from '../components/shared/HorizontalSection';
+import QuickCustomizer from '../components/shared/QuickCustomizer';
 import { useMusic } from '../context/music';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { filterExplicitTracks } from '../utils/catalog';
@@ -22,6 +23,7 @@ const Home = () => {
   const { likedSongs, playlists, recentPlays, setActivePlaylistId, preferences } = useMusic();
   const [discoveryMix, setDiscoveryMix] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isCustomizing, setIsCustomizing] = useState(false);
 
   useEffect(() => {
     const handleFsChange = () => setIsFullscreen(!!document.fullscreenElement);
@@ -200,11 +202,18 @@ const Home = () => {
         <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle,_rgba(255,255,255,0.1),_transparent_62%)] md:block" />
         <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
           <div className="max-w-2xl space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/12 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-brand">
                 <Sparkles className="h-4 w-4" />
                 <span>{greeting()}</span>
               </div>
+              <button 
+                onClick={() => setIsCustomizing(!isCustomizing)}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] transition-all ${isCustomizing ? 'bg-brand text-black border-brand' : 'border-white/10 bg-white/5 text-text-subdued hover:bg-white/10 hover:text-white'}`}
+              >
+                <Settings2 className="h-4 w-4" />
+                <span>Tune Feed</span>
+              </button>
             </div>
             <h1 className="hidden text-4xl font-black tracking-tight text-white md:block md:text-5xl lg:text-6xl">
               Real music, instant play, no sign-in wall.
@@ -252,6 +261,10 @@ const Home = () => {
         </div>
       </section>
 
+      <QuickCustomizer 
+        isOpen={isCustomizing} 
+        onClose={() => setIsCustomizing(false)} 
+      />
 
       {visibleDiscoveryMix.length > 0 ? (
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand/20 to-purple-500/10 p-1">
