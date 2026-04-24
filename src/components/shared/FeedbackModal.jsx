@@ -18,7 +18,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
     // FORM-SUBMISSION LOGIC (Formspree or Webhook)
     // You can replace 'YOUR_FORMSPREE_ID' with your real ID from formspree.io
     try {
-      const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+      const response = await fetch('https://formspree.io/f/xjkobyjv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
