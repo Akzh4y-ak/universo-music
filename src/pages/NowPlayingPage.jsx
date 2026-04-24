@@ -13,6 +13,7 @@ import {
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import AudioVisualizer from '../components/player/AudioVisualizer';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
 import { getTrackAlbumSlug, getTrackArtistSlug } from '../utils/musicMeta';
@@ -108,9 +109,13 @@ const NowPlayingPage = () => {
         </button>
       </header>
 
-      {/* Main Content Area: Centered Artwork */}
-      <main className="flex flex-1 flex-col items-center justify-center px-8">
-        <div className="relative group w-full max-w-[280px] sm:max-w-[400px]">
+      {/* Main Content Area: Centered Artwork with Visualizer */}
+      <main className="flex flex-1 flex-col items-center justify-center px-8 relative">
+        <div className="absolute inset-0 z-0 flex items-center justify-center opacity-40">
+           <AudioVisualizer className="max-w-2xl h-64" />
+        </div>
+
+        <div className="relative z-10 group w-full max-w-[280px] sm:max-w-[400px]">
           <div 
             className="absolute -inset-10 rounded-full blur-[80px] opacity-40 transition-all duration-1000 group-hover:opacity-60" 
             style={{ backgroundColor: 'var(--player-theme-color)' }}
@@ -130,7 +135,7 @@ const NowPlayingPage = () => {
       </main>
 
       {/* Player Controls & Info Area */}
-      <footer className="space-y-6 px-8 pb-12 pt-6 sm:pb-8">
+      <footer className="relative z-10 space-y-6 px-8 pb-12 pt-6 sm:pb-8">
         {/* Track Title & Artist */}
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
@@ -233,4 +238,3 @@ const NowPlayingPage = () => {
 };
 
 export default NowPlayingPage;
-

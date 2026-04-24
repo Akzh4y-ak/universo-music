@@ -670,6 +670,7 @@ export const PlayerProvider = ({ children }) => {
     radioError,
     providerStatus,
     themeColor,
+    audioRef,
   };
 
   const progressValue = useMemo(() => ({
