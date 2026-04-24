@@ -1,8 +1,9 @@
-import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check, MessageSquare } from 'lucide-react';
+import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check, MessageSquare, Heart } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
 import { LANGUAGES, GENRES } from '../data/preferences';
+import ShareButton from '../components/shared/ShareButton';
 
 const timerOptions = [15, 30, 45, 60];
 
@@ -317,6 +318,24 @@ const SettingsPage = () => {
                 <p className="mt-2 leading-6">Space toggles play/pause, left and right arrows skip tracks, and <span className="font-semibold text-white">Q</span> opens the queue.</p>
               </div>
             </div>
+          </div>
+
+          <div className="rounded-2xl border border-white/8 bg-gradient-to-br from-indigo-500/10 to-transparent p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/20 text-indigo-400">
+                <Heart className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white">Spread the word</h3>
+                <p className="text-xs text-text-subdued">Help us reach our goal of 10,000 users!</p>
+              </div>
+            </div>
+            <ShareButton 
+              title="Univerzo Music"
+              text="Listen to millions of tracks for free on Univerzo Music. No sign-in required!"
+              url={window.location.origin}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-white/5 py-3 text-sm font-bold text-white hover:bg-white/10"
+            />
           </div>
 
           <div 

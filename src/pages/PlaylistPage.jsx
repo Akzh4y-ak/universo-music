@@ -12,6 +12,7 @@ import SkeletonCard from '../components/shared/SkeletonCard';
 import { filterExplicitTracks } from '../utils/catalog';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { unslugifyValue } from '../utils/musicMeta';
+import ShareButton from '../components/shared/ShareButton';
 
 const PlaylistPage = () => {
   const { slug } = useParams();
@@ -158,7 +159,7 @@ const PlaylistPage = () => {
       </div>
 
       {/* Action Bar */}
-      <div className="flex items-center gap-4 py-2">
+      <div className="flex items-center gap-6 py-2">
         <button 
           onClick={handlePlayAll}
           disabled={loading || visibleTracks.length === 0}
@@ -166,6 +167,14 @@ const PlaylistPage = () => {
         >
           <Play className="w-6 h-6 fill-black text-black ml-1" />
         </button>
+
+        <ShareButton 
+          title={`${title} - Univerzo Music`}
+          text={`Check out the ${title} playlist on Univerzo Music!`}
+          url={window.location.href}
+          className="h-12 w-12 rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"
+        />
+
         <div className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-xs uppercase tracking-[0.24em] text-text-subdued">
           {savedPlaylist ? 'Saved in your library' : 'Dynamic search results'}
         </div>

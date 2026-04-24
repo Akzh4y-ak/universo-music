@@ -35,6 +35,7 @@ const PlaylistPage = lazyRoute('playlist', () => import('./pages/PlaylistPage'))
 const ArtistPage = lazyRoute('artist', () => import('./pages/ArtistPage'));
 const AlbumPage = lazyRoute('album', () => import('./pages/AlbumPage'));
 const GenrePage = lazyRoute('genre', () => import('./pages/GenrePage'));
+const TrackPage = lazyRoute('track', () => import('./pages/TrackPage'));
 const NowPlayingPage = lazyRoute('now-playing', () => import('./pages/NowPlayingPage'));
 const SettingsPage = lazyRoute('settings', () => import('./pages/SettingsPage'));
 const NotFoundPage = lazyRoute('not-found', () => import('./pages/NotFoundPage'));
@@ -59,6 +60,7 @@ function App() {
                   <Route path="artist/:slug" element={<ArtistPage />} />
                   <Route path="album/:slug" element={<AlbumPage />} />
                   <Route path="genre/:id" element={<GenrePage />} />
+                  <Route path="track/:id" element={<TrackPage />} />
                   <Route path="now-playing" element={<NowPlayingPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="*" element={<NotFoundPage />} />

@@ -359,3 +359,27 @@ export async function getJioSaavnDiscoveryTracks(key = 'featured pop', page = 0,
 
   return searchJioSaavnTracks(key, page, limit);
 }
+
+/**
+ * Fetch a single track by its ID.
+ */
+export async function getJioSaavnTrackDetails(trackId) {
+  if (!trackId) {
+    return null;
+  }
+
+  // Remove the 'saavn-' prefix if present
+  const cleanId = trackId.startsWith('saavn-') ? trackId.replace('saavn-', '') : trackId;
+
+  try {
+    const response = await axios.get(`${JIOSAAVN_API_ROOT}/songs`, {
+      params: { id: cleanId },
+    });
+
+    const trackData = response.data?.data?.[0];
+    return trackData ? normalizeJioSaavnTrack(trackData) : null;
+  } catch (error) {
+    console.error('JioSaavn track fetch error:', error.message);
+    return null;
+  }
+}

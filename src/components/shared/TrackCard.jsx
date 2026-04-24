@@ -5,6 +5,7 @@ import { usePlayer } from '../../context/player';
 import { useMusic } from '../../context/music';
 import { motion } from 'framer-motion';
 import { getTrackArtistSlug } from '../../utils/musicMeta';
+import ShareButton from './ShareButton';
 
 const MotionCard = motion.div;
 
@@ -17,6 +18,8 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
   const savedToPlaylist = isTrackInAnyPlaylist(track.id);
   const artistSlug = getTrackArtistSlug(track);
   const showArtistLink = Boolean(track.artist && artistSlug);
+
+  const trackUrl = `${window.location.origin}/track/${track.id}`;
 
   const handlePlay = () => {
     if (isCurrentTrack) {
@@ -83,9 +86,11 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
       
       <div className="flex flex-1 flex-col justify-between">
         <div className="mb-2">
-          <h3 className={`text-truncate-1 text-base font-bold ${isCurrentTrack ? 'text-brand' : 'text-white'}`}>
-            {track.title}
-          </h3>
+          <Link to={`/track/${track.id}`}>
+            <h3 className={`text-truncate-1 text-base font-bold transition-colors hover:text-brand ${isCurrentTrack ? 'text-brand' : 'text-white'}`}>
+              {track.title}
+            </h3>
+          </Link>
           <div className="mt-1 text-truncate-2 text-sm text-[#a7a7a7]">
             {showArtistLink ? (
               <Link
@@ -107,6 +112,12 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
           </div>
 
           <div className="flex items-center gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+            <ShareButton
+              title={track.title}
+              text={`Listen to ${track.title} by ${track.artist} on Univerzo Music.`}
+              url={trackUrl}
+              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+            />
             <button
               type="button"
               onClick={() => saveTrackToPlaylist(track)}

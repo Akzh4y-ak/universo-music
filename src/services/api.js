@@ -3,10 +3,26 @@ import {
   searchJioSaavnTracks,
   getJioSaavnDiscoveryTracks,
   getJioSaavnTrendingTracks,
+  getJioSaavnTrackDetails,
 } from './providers/jiosaavn';
 
 export function getCatalogStatus() {
   return getMusicProviderInfo();
+}
+
+/**
+ * Fetch a single track by its unique ID.
+ */
+export async function getTrackById(trackId) {
+  if (!trackId) return null;
+
+  // Currently we only have JioSaavn as a provider for individual track fetches
+  if (trackId.startsWith('saavn-')) {
+    return getJioSaavnTrackDetails(trackId);
+  }
+
+  // Fallback for generic IDs if we add more providers
+  return getJioSaavnTrackDetails(trackId);
 }
 
 /**
