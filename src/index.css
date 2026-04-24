@@ -19,6 +19,32 @@
   body {
     @apply bg-bg-base text-text-base font-sans antialiased;
     overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Smooth like butter scrolling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -56,6 +82,15 @@
     background: radial-gradient(circle at 50% -20%, rgba(30, 215, 96, 0.15), transparent 80%),
                 radial-gradient(circle at 0% 100%, rgba(30, 215, 96, 0.05), transparent 50%),
                 #000000;
+  }
+
+  /* Smooth Touch Utilities */
+  .touch-momentum {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .active-scale {
+    @apply active:scale-95 transition-transform duration-200;
   }
 }
 

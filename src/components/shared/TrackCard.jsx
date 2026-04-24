@@ -41,7 +41,7 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
   return (
     <MotionCard
       whileHover={{ y: 0 }}
-      className="group relative flex h-full flex-col rounded-md bg-[#181818] p-4 transition-all hover:bg-[#282828]"
+      className="group relative flex h-full flex-col rounded-md bg-[#181818] p-4 transition-all hover:bg-[#282828] snap-start"
     >
       <div
         role="button"

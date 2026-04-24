@@ -18,7 +18,7 @@ const HorizontalSection = ({ title, subtitle, to, children }) => {
         )}
       </div>
       
-      <div className="flex -mx-4 px-4 gap-4 overflow-x-auto pb-4 scrollbar-none snap-x touch-pan-x">
+      <div className="flex -mx-4 px-4 gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory touch-pan-x overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
         {children}
       </div>
     </section>
