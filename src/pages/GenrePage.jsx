@@ -105,7 +105,16 @@ const GenrePage = () => {
       <Helmet>
         <title>{genre.title} Songs & Trending Hits - Free Stream on Univerzo Music</title>
         <meta name="description" content={`Listen to the best ${genre.title} music, hits, and trending tracks. ${genre.description} High-quality streaming with no sign-in.`} />
-        <meta name="keywords" content={`${genre.id}, ${genre.title} songs, listen to ${genre.title} online, free ${genre.title} music, trending ${genre.title} hits, univerzo ${genre.id}`} />
+        <meta name="keywords" content={`
+          ${genre.title}, 
+          ${genre.title} songs no ads, 
+          free ${genre.title} streaming, 
+          listen to ${genre.title} online free, 
+          ${genre.id === 'lo-fi' ? 'study music no ads, focus music for work,' : ''}
+          ${genre.id === 'party' ? 'party anthems no ads, dance music free,' : ''}
+          ${genre.id === 'devotional' ? 'spiritual music free, morning bhajans no ads,' : ''}
+          univerzo music ${genre.id}
+        `} />
         <link rel="canonical" href={`https://universo-music.vercel.app/genre/${id}`} />
         
         {/* OpenGraph */}

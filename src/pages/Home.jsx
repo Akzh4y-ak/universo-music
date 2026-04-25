@@ -198,9 +198,9 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
-        <title>Univerzo Music - Free Online Songs & Ad-Free Discovery</title>
-        <meta name="description" content="Stream millions of songs for free on Univerzo Music. Listen to latest Bollywood hits, Punjabi pop, and global trending tracks with no ads and no sign-in. Your best free Spotify alternative for high-quality Indian and international music." />
-        <meta name="keywords" content="free music streaming, listen to songs online, no ads music player, bollywood hits 2026, latest punjabi songs, tamil hits, telugu trending, free spotify alternative, high quality audio streaming, regional indian music" />
+        <title>Univerzo Music - Unlimited Free Songs | No Ads, No Sign-in</title>
+        <meta name="description" content="Stream millions of songs for free on Univerzo Music. The ultimate no-ads, no-payment music player. Listen to latest Bollywood, Punjabi, and International hits even on slow internet. High-quality discovery with no sign-in wall." />
+        <meta name="keywords" content="free music streaming, no ads music player, no sign-in music, low data music player, music for slow internet, free spotify alternative, no payment music app, listen to songs online free, bollywood hits 2026, lightweight music player web" />
         <link rel="canonical" href="https://universo-music.vercel.app/" />
         
         {/* OpenGraph / Facebook */}
