@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { MusicProvider } from './context/MusicContext';
 import { PlayerProvider } from './context/PlayerContext';
 import { HelmetProvider } from 'react-helmet-async';
@@ -44,6 +44,32 @@ const AdminPortal = lazyRoute('admin', () => import('./pages/AdminPortal'));
 const NotFoundPage = lazyRoute('not-found', () => import('./pages/NotFoundPage'));
 
 function App() {
+  // Silent "New User" Email Notification
+  useEffect(() => {
+    const hasReported = localStorage.getItem('univerzo_new_user_reported');
+    if (!hasReported) {
+      // It's a new unique visitor!
+      fetch('https://formspree.io/f/xjkobyjv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: '🎉 NEW_UNIQUE_VISITOR',
+          message: 'Someone just visited Univerzo Music for the very first time on this device!',
+          page: window.location.pathname,
+          userAgent: navigator.userAgent,
+          language: navigator.language
+        })
+      }).then((response) => {
+        if (response.ok) {
+          // Only mark as reported if the email was successfully sent
+          localStorage.setItem('univerzo_new_user_reported', 'true');
+        }
+      }).catch(() => {
+        // Silently ignore errors to not disrupt the user experience
+      });
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <Router>
