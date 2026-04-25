@@ -216,6 +216,23 @@ const Home = () => {
         <meta name="twitter:title" content="Univerzo Music - Best Free Music Player" />
         <meta name="twitter:description" content="Stream your favorite songs for free with no ads. The ultimate music discovery platform." />
         <meta name="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
+        
+        {/* JSON-LD Structured Data for Sitelinks Searchbox */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://universo-music.vercel.app/",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://universo-music.vercel.app/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
       </Helmet>
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.22),_transparent_32%),linear-gradient(135deg,_rgba(255,255,255,0.07),_rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">

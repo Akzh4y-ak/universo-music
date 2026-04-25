@@ -121,10 +121,13 @@ const ArtistPage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
-        <title>{artistName} - Univerzo Music</title>
-        <meta name="description" content={`Listen to top tracks by ${artistName} on Univerzo Music. Discovery live hits and trending songs instantly.`} />
-        <meta property="og:title" content={`${artistName} - Artist on Univerzo`} />
-        <meta property="og:description" content={`Discover and play music from ${artistName} on Univerzo Music.`} />
+        <title>{artistName} - Stream Free Songs & Albums on Univerzo Music</title>
+        <meta name="description" content={`Listen to top tracks and latest releases by ${artistName} on Univerzo Music. High-quality free streaming, no ads, and no sign-in required. The best free alternative to explore ${artistName}'s discography.`} />
+        <meta name="keywords" content={`${artistName}, ${artistName} songs, ${artistName} free streaming, listen to ${artistName} online, no ads music, univerzo music`} />
+        <link rel="canonical" href={`https://universo-music.vercel.app/artist/${slug}`} />
+        
+        <meta property="og:title" content={`${artistName} - Artist on Univerzo Music`} />
+        <meta property="og:description" content={`Discover and play music from ${artistName} for free with no ads on Univerzo Music.`} />
         {heroImage && <meta property="og:image" content={heroImage} />}
         <meta property="og:type" content="music.playlist" />
         <meta name="twitter:card" content="summary" />

@@ -131,10 +131,13 @@ const TrackPage = () => {
   return (
     <div className="flex flex-col gap-12 pb-8">
       <Helmet>
-        <title>{track.title} by {track.artist} - Univerzo Music</title>
-        <meta name="description" content={`Listen to ${track.title} by ${track.artist} on Univerzo Music. High-quality streaming, no sign-in wall.`} />
+        <title>{track.title} by {track.artist} - Free MP3 Stream on Univerzo Music</title>
+        <meta name="description" content={`Listen to ${track.title} by ${track.artist} on Univerzo Music. High-quality free streaming, no sign-in required, and no annoying ads. Your #1 destination for free music discovery.`} />
+        <meta name="keywords" content={`${track.title}, ${track.artist}, ${track.title} mp3, stream ${track.title} free, no ads music, ${track.artist} latest song, univerzo music`} />
+        <link rel="canonical" href={`https://universo-music.vercel.app/track/${id}`} />
+        
         <meta property="og:title" content={`${track.title} - ${track.artist}`} />
-        <meta property="og:description" content={`Play ${track.title} instantly on Univerzo Music.`} />
+        <meta property="og:description" content={`Play ${track.title} instantly for free with no ads on Univerzo Music.`} />
         <meta property="og:image" content={track.cover} />
         <meta property="og:type" content="music.song" />
         <meta name="twitter:card" content="summary_large_image" />
