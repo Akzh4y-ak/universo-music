@@ -1,9 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { MusicProvider } from './context/MusicContext';
 import { PlayerProvider } from './context/PlayerContext';
-import Layout from './components/layout/Layout';
 import { HelmetProvider } from 'react-helmet-async';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import Layout from './components/layout/Layout';
 
 function lazyRoute(routeKey, importer) {
   return lazy(async () => {
@@ -38,6 +40,7 @@ const GenrePage = lazyRoute('genre', () => import('./pages/GenrePage'));
 const TrackPage = lazyRoute('track', () => import('./pages/TrackPage'));
 const NowPlayingPage = lazyRoute('now-playing', () => import('./pages/NowPlayingPage'));
 const SettingsPage = lazyRoute('settings', () => import('./pages/SettingsPage'));
+const AdminPortal = lazyRoute('admin', () => import('./pages/AdminPortal'));
 const NotFoundPage = lazyRoute('not-found', () => import('./pages/NotFoundPage'));
 
 function App() {
@@ -63,9 +66,12 @@ function App() {
                   <Route path="track/:id" element={<TrackPage />} />
                   <Route path="now-playing" element={<NowPlayingPage />} />
                   <Route path="settings" element={<SettingsPage />} />
-                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="admin" element={<AdminPortal />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
               </Routes>
+              <Analytics />
+              <SpeedInsights />
             </Suspense>
           </PlayerProvider>
         </MusicProvider>
