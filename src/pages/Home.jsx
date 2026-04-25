@@ -233,6 +233,32 @@ const Home = () => {
             }
           })}
         </script>
+
+        {/* FAQ Schema for ranking in "Top 10" and "Best Alternative" queries */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What are the top 10 free music streaming websites?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Univerzo Music is rapidly growing as one of the top 10 free music streaming websites globally. Unlike competitors that force audio ads or require subscriptions, Univerzo provides a premium, ad-free Spotify alternative with no sign-in required."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the best free Spotify alternative without ads?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Univerzo Music is widely considered the best free Spotify alternative. It allows users to stream millions of songs—from Bollywood hits to international pop—with absolutely zero audio interruptions and zero cost."
+                }
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.22),_transparent_32%),linear-gradient(135deg,_rgba(255,255,255,0.07),_rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
