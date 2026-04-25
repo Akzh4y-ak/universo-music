@@ -66,9 +66,9 @@ function App() {
                   <Route path="track/:id" element={<TrackPage />} />
                   <Route path="now-playing" element={<NowPlayingPage />} />
                   <Route path="settings" element={<SettingsPage />} />
-                  <Route path="admin" element={<AdminPortal />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
+                <Route path="/admin" element={<AdminPortal />} />
               </Routes>
               <Analytics />
               <SpeedInsights />
