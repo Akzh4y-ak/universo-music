@@ -5,4 +5,4 @@ Allow: /artist/
 Allow: /playlist/
 Disallow: /search?*
 
-Sitemap: https://univerzo-music.vercel.app/sitemap.xml
+Sitemap: https://universo-music.vercel.app/sitemap.xml

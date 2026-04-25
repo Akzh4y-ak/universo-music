@@ -198,8 +198,23 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
-        <title>Home - Univerzo Music</title>
-        <meta name="description" content="Discover trending hits, electronic dance, and personalized music recommendations on Univerzo Music." />
+        <title>Univerzo Music - Free Streaming & Curated Discovery</title>
+        <meta name="description" content="Discover trending hits, Bollywood essentials, and personalized music recommendations on Univerzo Music. High-quality free streaming with no sign-in required." />
+        <link rel="canonical" href="https://universo-music.vercel.app/" />
+        
+        {/* OpenGraph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://universo-music.vercel.app/" />
+        <meta property="og:title" content="Univerzo Music - Free Streaming & Curated Discovery" />
+        <meta property="og:description" content="Discover trending hits, Bollywood essentials, and personalized music recommendations with no sign-in required." />
+        <meta property="og:image" content="https://universo-music.vercel.app/og-image.png" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://universo-music.vercel.app/" />
+        <meta name="twitter:title" content="Univerzo Music - Free Streaming & Discovery" />
+        <meta name="twitter:description" content="Discover trending hits and personalized music recommendations with no sign-in required." />
+        <meta name="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
       </Helmet>
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.22),_transparent_32%),linear-gradient(135deg,_rgba(255,255,255,0.07),_rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
