@@ -1,3 +1,4 @@
+export const genres = [
   {
     id: 'marathi',
     title: 'Marathi Hits',
