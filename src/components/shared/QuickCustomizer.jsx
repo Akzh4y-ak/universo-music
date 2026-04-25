@@ -41,12 +41,20 @@ const QuickCustomizer = ({ isOpen, onClose }) => {
             <p className="text-xs text-text-subdued">Select what you want to hear right now.</p>
           </div>
         </div>
-        <button 
-          onClick={onClose}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-text-subdued hover:bg-white/10 hover:text-white"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => updatePreferences({ preferredLanguages: [], preferredGenres: [], hasSetPreferences: false })}
+            className="rounded-full bg-white/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-text-subdued transition-colors hover:bg-white/10 hover:text-white"
+          >
+            Reset
+          </button>
+          <button 
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-text-subdued hover:bg-white/10 hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div className="space-y-6">

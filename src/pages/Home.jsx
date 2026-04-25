@@ -54,28 +54,32 @@ const Home = () => {
       setError('');
 
       try {
-        const trendingPromise = getTrendingTracks('featured pop', 30);
+        const hasSet = preferences.hasSetPreferences;
         
-        const preferredLangs = preferences.preferredLanguages.length > 0 
+        // Strictly use preferred or default
+        const preferredLangs = hasSet && preferences.preferredLanguages.length > 0 
           ? preferences.preferredLanguages 
-          : ['hindi', 'english', 'punjabi'];
+          : preferences.preferredLanguages.length > 0 ? preferences.preferredLanguages : ['hindi', 'english', 'punjabi'];
         
-        const preferredGenres = preferences.preferredGenres.length > 0
+        const preferredGenres = hasSet && preferences.preferredGenres.length > 0
           ? preferences.preferredGenres
-          : ['pop', 'lo-fi'];
+          : preferences.preferredGenres.length > 0 ? preferences.preferredGenres : ['pop', 'lo-fi'];
 
+        // Trending should respect languages
+        const trendingPromise = getTrendingTracks('featured pop', 30, 0, preferredLangs);
+        
         // Favorite artists from likes
         const favoriteArtists = Array.from(new Set(likedSongs.map(s => s.artist))).slice(0, 3);
         const artistSeeds = favoriteArtists.length > 0 ? favoriteArtists : ['Arijit Singh', 'Taylor Swift'];
 
-        const langPromises = preferredLangs.map(lang => getDiscoveryTracks(lang, 12));
-        const genrePromises = preferredGenres.map(genre => getDiscoveryTracks(genre, 12));
+        const langPromises = preferredLangs.map(lang => getDiscoveryTracks(lang, 12, 0, [lang]));
+        const genrePromises = preferredGenres.map(genre => getDiscoveryTracks(genre, 12, 0, preferredLangs));
         
-        // Smart discovery based on random selection of preferences
+        // Smart discovery based on broader selection of preferences (up to 6 seeds)
         const mixSeeds = [...preferredLangs, ...preferredGenres, ...artistSeeds]
           .sort(() => 0.5 - Math.random())
-          .slice(0, 3);
-        const discoveryPromises = mixSeeds.map(seed => searchTracks(seed, 10));
+          .slice(0, 6);
+        const discoveryPromises = mixSeeds.map(seed => searchTracks(seed, 8));
         
         const results = await Promise.all([
           trendingPromise, 
@@ -94,14 +98,14 @@ const Home = () => {
         setDiscoveryMix(rawMix);
 
         const langSections = preferredLangs.map((lang, index) => ({
-          id: `lang-${lang}`,
+          id: lang,
           title: `${lang.charAt(0).toUpperCase() + lang.slice(1)} Hits`,
           tracks: results[index + 1] || []
         }));
 
         const startIndexGenres = 1 + preferredLangs.length;
         const genreSections = preferredGenres.map((genre, index) => ({
-          id: `genre-${genre}`,
+          id: genre,
           title: `${genre.charAt(0).toUpperCase() + genre.slice(1)} Vibes`,
           tracks: results[startIndexGenres + index] || []
         }));

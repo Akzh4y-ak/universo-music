@@ -72,6 +72,42 @@ const acousticSources = [
   { query: 'acoustic', preferredName: 'Acoustic Sessions', preferredLanguages: ['english'] },
   { query: 'acoustic', preferredName: 'Acoustic Nights', preferredLanguages: ['english'] },
 ];
+const marathiSources = [
+  { query: 'marathi hits', preferredName: 'Marathi: India Superhits Top 50', preferredLanguages: ['marathi'] },
+  { query: 'marathi hits', preferredName: 'Marathi Hit Songs', preferredLanguages: ['marathi'] },
+];
+const bengaliSources = [
+  { query: 'bengali hits', preferredName: 'Bengali: India Superhits Top 50', preferredLanguages: ['bengali'] },
+  { query: 'bengali hits', preferredName: 'Bengali Hit Songs', preferredLanguages: ['bengali'] },
+];
+const kannadaSources = [
+  { query: 'kannada hits', preferredName: 'Kannada: India Superhits Top 50', preferredLanguages: ['kannada'] },
+  { query: 'kannada hits', preferredName: 'Kannada Hit Songs', preferredLanguages: ['kannada'] },
+];
+const bollywoodSources = [
+  { query: 'bollywood hits', preferredName: 'Bollywood: India Superhits Top 50', preferredLanguages: ['hindi'] },
+  { query: 'bollywood hits', preferredName: 'Bollywood Hit Songs', preferredLanguages: ['hindi'] },
+];
+const rockSources = [
+  { query: 'rock', preferredName: 'Best Of Rock - English', preferredLanguages: ['english'] },
+  { query: 'rock', preferredName: 'Rock Classics', preferredLanguages: ['english'] },
+];
+const romanceSources = [
+  { query: 'romance', preferredName: 'Best Of Romance - Hindi', preferredLanguages: ['hindi'] },
+  { query: 'romance', preferredName: 'Love Hits - English', preferredLanguages: ['english'] },
+];
+const partySources = [
+  { query: 'party', preferredName: 'Party Hits - Hindi', preferredLanguages: ['hindi'] },
+  { query: 'party', preferredName: 'Party Hits - English', preferredLanguages: ['english'] },
+];
+const devotionalSources = [
+  { query: 'devotional', preferredName: 'Bhakti Sagar', preferredLanguages: ['hindi'] },
+  { query: 'devotional', preferredName: 'Devotional Hits', preferredLanguages: ['hindi'] },
+];
+const classicalSources = [
+  { query: 'classical', preferredName: 'Hindustani Classical', preferredLanguages: ['hindi'] },
+  { query: 'classical', preferredName: 'Carnatic Classical', preferredLanguages: ['tamil', 'telugu'] },
+];
 const EDITORIAL_DISCOVERY_SOURCES = {
   'featured pop': [
     ...featuredPopSources,
@@ -108,6 +144,17 @@ const EDITORIAL_DISCOVERY_SOURCES = {
   'workout motivation hits': [...workoutSources],
   acoustic: [...acousticSources],
   'acoustic chill singer songwriter': [...acousticSources],
+  marathi: [...marathiSources],
+  bengali: [...bengaliSources],
+  kannada: [...kannadaSources],
+  bollywood: [...bollywoodSources],
+  rock: [...rockSources],
+  romance: [...romanceSources],
+  party: [...partySources],
+  devotional: [...devotionalSources],
+  classical: [...classicalSources],
+  pop: [...featuredPopSources],
+  electro: [...edmSources],
 };
 
 function formatDuration(seconds) {
@@ -345,12 +392,29 @@ async function getEditorialPlaylistTracks(sources = [], page = 0, limit = 12) {
   return mergedTracks.slice(startIndex, startIndex + Math.max(1, limit));
 }
 
-export async function getJioSaavnTrendingTracks(seed = 'trending hits', page = 0, limit = 12) {
-  return getJioSaavnDiscoveryTracks(seed, page, limit);
+export async function getJioSaavnTrendingTracks(seed = 'trending hits', page = 0, limit = 12, preferredLanguages = []) {
+  return getJioSaavnDiscoveryTracks(seed, page, limit, preferredLanguages);
 }
 
-export async function getJioSaavnDiscoveryTracks(key = 'featured pop', page = 0, limit = 12) {
-  const sources = EDITORIAL_DISCOVERY_SOURCES[key];
+export async function getJioSaavnDiscoveryTracks(key = 'featured pop', page = 0, limit = 12, preferredLanguages = []) {
+  let sources = EDITORIAL_DISCOVERY_SOURCES[key];
+
+  if (!sources && typeof key === 'string' && key.includes('-')) {
+    // Try without hyphens (hip-hop -> hiphop)
+    sources = EDITORIAL_DISCOVERY_SOURCES[key.replace(/-/g, '')];
+  }
+
+  // If we have sources and preferred languages, try to filter sources that match the language
+  if (sources && preferredLanguages && preferredLanguages.length > 0) {
+    const filteredSources = sources.filter((source) => (
+      source.preferredLanguages && source.preferredLanguages.some((lang) => preferredLanguages.includes(lang))
+    ));
+
+    if (filteredSources.length > 0) {
+      sources = filteredSources;
+    }
+  }
+
   const editorialTracks = await getEditorialPlaylistTracks(sources, page, limit);
 
   if (editorialTracks.length > 0) {
