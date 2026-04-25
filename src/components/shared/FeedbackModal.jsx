@@ -29,7 +29,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         })
       });
 
-      if (response.ok || true) { // Defaulting to success for demo
+      if (response.ok) { // Successfully submitted to Formspree
         setIsSuccess(true);
         setTimeout(() => {
           setIsSuccess(false);

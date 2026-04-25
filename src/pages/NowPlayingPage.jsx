@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+
 import {
   ChevronDown,
   Heart,
@@ -16,7 +16,7 @@ import CatalogFeedback from '../components/shared/CatalogFeedback';
 import AudioVisualizer from '../components/player/AudioVisualizer';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
-import { getTrackAlbumSlug, getTrackArtistSlug } from '../utils/musicMeta';
+import { getTrackArtistSlug } from '../utils/musicMeta';
 
 function formatTime(time) {
   if (!time || Number.isNaN(time)) {
@@ -65,7 +65,6 @@ const NowPlayingPage = () => {
 
   const liked = isLiked(currentTrack.id);
   const artistSlug = getTrackArtistSlug(currentTrack);
-  const albumSlug = getTrackAlbumSlug(currentTrack);
 
   return (
     <div 

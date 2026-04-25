@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { Settings2, Check, X } from 'lucide-react';
 import { LANGUAGES, GENRES } from '../../data/preferences';
 import { useMusic } from '../../context/music';

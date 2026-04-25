@@ -124,7 +124,7 @@ const Home = () => {
     return () => {
       cancelled = true;
     };
-  }, [preferences.preferredLanguages, preferences.preferredGenres, likedSongs.length]);
+  }, [preferences.preferredLanguages, preferences.preferredGenres, preferences.hasSetPreferences, likedSongs]);
 
 
   const personalizedRecent = useMemo(() => {
