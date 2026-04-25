@@ -103,8 +103,9 @@ const GenrePage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
-        <title>{genre.title} Songs & Hits - Stream Free on Univerzo Music</title>
+        <title>{genre.title} Songs & Trending Hits - Free Stream on Univerzo Music</title>
         <meta name="description" content={`Listen to the best ${genre.title} music, hits, and trending tracks. ${genre.description} High-quality streaming with no sign-in.`} />
+        <meta name="keywords" content={`${genre.id}, ${genre.title} songs, listen to ${genre.title} online, free ${genre.title} music, trending ${genre.title} hits, univerzo ${genre.id}`} />
         <link rel="canonical" href={`https://universo-music.vercel.app/genre/${id}`} />
         
         {/* OpenGraph */}

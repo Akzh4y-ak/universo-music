@@ -198,22 +198,23 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Helmet>
-        <title>Univerzo Music - Free Streaming & Curated Discovery</title>
-        <meta name="description" content="Discover trending hits, Bollywood essentials, and personalized music recommendations on Univerzo Music. High-quality free streaming with no sign-in required." />
+        <title>Univerzo Music - Free Online Songs & Ad-Free Discovery</title>
+        <meta name="description" content="Stream millions of songs for free on Univerzo Music. Listen to latest Bollywood hits, Punjabi pop, and global trending tracks with no ads and no sign-in. Your best free Spotify alternative for high-quality Indian and international music." />
+        <meta name="keywords" content="free music streaming, listen to songs online, no ads music player, bollywood hits 2026, latest punjabi songs, tamil hits, telugu trending, free spotify alternative, high quality audio streaming, regional indian music" />
         <link rel="canonical" href="https://universo-music.vercel.app/" />
         
         {/* OpenGraph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://universo-music.vercel.app/" />
-        <meta property="og:title" content="Univerzo Music - Free Streaming & Curated Discovery" />
-        <meta property="og:description" content="Discover trending hits, Bollywood essentials, and personalized music recommendations with no sign-in required." />
+        <meta property="og:title" content="Univerzo Music - Unlimited Free Streaming & Ad-Free Music" />
+        <meta property="og:description" content="Listen to millions of songs, including latest Bollywood and regional hits. No ads, no sign-in, just pure music discovery." />
         <meta property="og:image" content="https://universo-music.vercel.app/og-image.png" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://universo-music.vercel.app/" />
-        <meta name="twitter:title" content="Univerzo Music - Free Streaming & Discovery" />
-        <meta name="twitter:description" content="Discover trending hits and personalized music recommendations with no sign-in required." />
+        <meta name="twitter:title" content="Univerzo Music - Best Free Music Player" />
+        <meta name="twitter:description" content="Stream your favorite songs for free with no ads. The ultimate music discovery platform." />
         <meta name="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
       </Helmet>
 
