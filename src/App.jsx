@@ -27,6 +27,7 @@ function lazyRoute(routeKey, importer) {
 }
 
 const Home = lazyRoute('home', () => import('./pages/Home'));
+const FreeStreamingPage = lazyRoute('free-streaming', () => import('./pages/FreeStreamingPage'));
 const ArtistsDirectoryPage = lazyRoute('artists-directory', () => import('./pages/ArtistsDirectoryPage'));
 const AlbumsDirectoryPage = lazyRoute('albums-directory', () => import('./pages/AlbumsDirectoryPage'));
 const TracksDirectoryPage = lazyRoute('tracks-directory', () => import('./pages/TracksDirectoryPage'));
@@ -86,6 +87,7 @@ function App() {
                   <Route path="albums" element={<AlbumsDirectoryPage />} />
                   <Route path="tracks" element={<TracksDirectoryPage />} />
                   <Route path="search" element={<SearchPage />} />
+                  <Route path="free-streaming" element={<FreeStreamingPage />} />
                   <Route path="trending" element={<TrendingPage />} />
                   <Route path="liked" element={<LikedSongs />} />
                   <Route path="recent" element={<RecentPlays />} />
