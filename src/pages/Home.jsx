@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Compass, Headphones, Sparkles, TrendingUp, Maximize2, Minimize2, Settings2 } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Seo from '../components/seo/Seo';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
 import { getDiscoveryTracks, getTrendingTracks, searchTracks } from '../services/api';
 import PlaylistCard from '../components/shared/PlaylistCard';
@@ -14,6 +14,7 @@ import QuickCustomizer from '../components/shared/QuickCustomizer';
 import { useMusic } from '../context/music';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { filterExplicitTracks } from '../utils/catalog';
+import { SITE_NAME, SITE_URL } from '../utils/seo';
 
 const Home = () => {
   const [dynamicSections, setDynamicSections] = useState([]);
@@ -197,69 +198,42 @@ const Home = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>Univerzo Music - Unlimited Free Songs | No Ads, No Sign-in</title>
-        <meta name="description" content="Stream millions of songs for free on Univerzo Music. The ultimate no-ads, no-payment music player. Listen to latest Bollywood, Punjabi, and International hits even on slow internet. High-quality discovery with no sign-in wall." />
-        <meta name="keywords" content="free music streaming, no ads music player, no sign-in music, low data music player, music for slow internet, free spotify alternative, no payment music app, listen to songs online free, bollywood hits 2026, lightweight music player web" />
-        <link rel="canonical" href="https://universo-music.vercel.app/" />
-        
-        {/* OpenGraph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://universo-music.vercel.app/" />
-        <meta property="og:title" content="Univerzo Music - Unlimited Free Streaming & Ad-Free Music" />
-        <meta property="og:description" content="Listen to millions of songs, including latest Bollywood and regional hits. No ads, no sign-in, just pure music discovery." />
-        <meta property="og:image" content="https://universo-music.vercel.app/og-image.png" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://universo-music.vercel.app/" />
-        <meta name="twitter:title" content="Univerzo Music - Best Free Music Player" />
-        <meta name="twitter:description" content="Stream your favorite songs for free with no ads. The ultimate music discovery platform." />
-        <meta name="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
-        
-        {/* JSON-LD Structured Data for Sitelinks Searchbox */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "url": "https://universo-music.vercel.app/",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://universo-music.vercel.app/search?q={search_term_string}"
+      <Seo
+        title="Univerzo Music | Free Music Streaming Without Sign-in"
+        description="Stream trending songs, genre mixes, and artist discoveries on Univerzo Music. Listen instantly in your browser without a sign-in wall."
+        path="/"
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: SITE_NAME,
+            url: SITE_URL,
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
               },
-              "query-input": "required name=search_term_string"
-            }
-          })}
-        </script>
-
-        {/* FAQ Schema for ranking in "Top 10" and "Best Alternative" queries */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "What are the top 10 free music streaming websites?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Univerzo Music is rapidly growing as one of the top 10 free music streaming websites globally. Unlike competitors that force audio ads or require subscriptions, Univerzo provides a premium, ad-free Spotify alternative with no sign-in required."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the best free Spotify alternative without ads?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Univerzo Music is widely considered the best free Spotify alternative. It allows users to stream millions of songs—from Bollywood hits to international pop—with absolutely zero audio interruptions and zero cost."
-                }
-              }
-            ]
-          })}
-        </script>
-      </Helmet>
+              'query-input': 'required name=search_term_string',
+            },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebApplication',
+            name: SITE_NAME,
+            url: SITE_URL,
+            applicationCategory: 'MusicApplication',
+            operatingSystem: 'Web',
+            description:
+              'A browser-based music streaming app for trending songs, genre discovery, playlists, and artist pages.',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'USD',
+            },
+          },
+        ]}
+      />
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.22),_transparent_32%),linear-gradient(135deg,_rgba(255,255,255,0.07),_rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle,_rgba(255,255,255,0.1),_transparent_62%)] md:block" />

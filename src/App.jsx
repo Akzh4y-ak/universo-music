@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import { MusicProvider } from './context/MusicContext';
 import { PlayerProvider } from './context/PlayerContext';
@@ -92,7 +92,7 @@ function App() {
                   <Route path="track/:id" element={<TrackPage />} />
                   <Route path="now-playing" element={<NowPlayingPage />} />
                   <Route path="settings" element={<SettingsPage />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
                 <Route path="/admin" element={<AdminPortal />} />
               </Routes>

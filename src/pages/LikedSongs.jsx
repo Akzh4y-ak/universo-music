@@ -1,7 +1,7 @@
 import { Heart, Play } from 'lucide-react';
 import { useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Seo from '../components/seo/Seo';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import { useMusic } from '../context/music';
@@ -24,9 +24,12 @@ const LikedSongs = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>Liked Songs - Univerzo Music</title>
-      </Helmet>
+      <Seo
+        title="Liked Songs | Univerzo Music"
+        description="Saved liked songs in your Univerzo Music library."
+        path="/liked"
+        noindex
+      />
 
       <div className="flex flex-col md:flex-row items-end gap-6 pt-10 pb-6 border-b border-white/10">
         <div className="w-52 h-52 bg-gradient-to-br from-indigo-500 to-purple-800 shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center justify-center rounded-md">

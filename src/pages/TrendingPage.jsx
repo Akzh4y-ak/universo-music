@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Flame, Globe2, Radar } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -142,13 +142,15 @@ const TrendingPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>Trending - Univerzo Music</title>
-        <meta
-          name="description"
-          content="Browse chart movers, viral records, and globally trending songs on Univerzo Music."
-        />
-      </Helmet>
+      <Seo
+        title="Trending Songs | Univerzo Music"
+        description="Browse chart movers, regional momentum, and globally trending songs on Univerzo Music."
+        path="/trending"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Trending', path: '/trending' },
+        ]}
+      />
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.22),_transparent_32%),linear-gradient(135deg,_rgba(255,255,255,0.07),_rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle,_rgba(255,255,255,0.12),_transparent_62%)] md:block" />

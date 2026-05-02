@@ -10,10 +10,10 @@ import {
   SkipBack,
   SkipForward,
 } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
 import AudioVisualizer from '../components/player/AudioVisualizer';
+import Seo from '../components/seo/Seo';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
 import { getTrackArtistSlug } from '../utils/musicMeta';
@@ -50,9 +50,12 @@ const NowPlayingPage = () => {
   if (!currentTrack) {
     return (
       <div className="flex h-[80vh] flex-col items-center justify-center p-8 text-center">
-        <Helmet>
-          <title>Now Playing - Univerzo Music</title>
-        </Helmet>
+        <Seo
+          title="Now Playing | Univerzo Music"
+          description="Expanded now playing experience inside Univerzo Music."
+          path="/now-playing"
+          noindex
+        />
         <CatalogFeedback
           title="Nothing is playing"
           message="Pick a song to start the immersive experience."
@@ -73,6 +76,12 @@ const NowPlayingPage = () => {
         background: `radial-gradient(circle at 50% 30%, var(--player-theme-alpha) 0%, rgba(0,0,0,1) 85%)`
       }}
     >
+      <Seo
+        title={`Now Playing: ${currentTrack.title} | Univerzo Music`}
+        description={`Current playback view for ${currentTrack.title} on Univerzo Music.`}
+        path="/now-playing"
+        noindex
+      />
       {/* Dynamic Background Accents */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div 
@@ -84,10 +93,6 @@ const NowPlayingPage = () => {
           style={{ backgroundColor: 'var(--player-theme-color)' }}
         />
       </div>
-      <Helmet>
-        <title>Now Playing - {currentTrack.title}</title>
-      </Helmet>
-
       {/* Header */}
       <header className="flex h-16 items-center justify-between px-6">
         <button

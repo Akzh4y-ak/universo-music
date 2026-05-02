@@ -1,7 +1,7 @@
 import { Clock } from 'lucide-react';
 import { useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Seo from '../components/seo/Seo';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import { useMusic } from '../context/music';
@@ -16,9 +16,12 @@ const RecentPlays = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>Recently Played - Univerzo Music</title>
-      </Helmet>
+      <Seo
+        title="Recently Played | Univerzo Music"
+        description="Your recent listening history inside Univerzo Music."
+        path="/recent"
+        noindex
+      />
 
       <div className="flex flex-col md:flex-row items-end gap-6 pt-10 pb-6 border-b border-white/10">
         <div className="w-52 h-52 bg-bg-elevated shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center justify-center rounded-md border border-white/5">

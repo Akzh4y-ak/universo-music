@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Allow: /track/
-Allow: /artist/
-Allow: /playlist/
-Disallow: /search?*
 
 Sitemap: https://universo-music.vercel.app/sitemap.xml

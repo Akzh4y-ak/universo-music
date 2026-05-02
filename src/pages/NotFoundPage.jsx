@@ -1,13 +1,16 @@
 import { Compass } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import Seo from '../components/seo/Seo';
 
 const NotFoundPage = () => {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
-      <Helmet>
-        <title>Page Not Found - Univerzo Music</title>
-      </Helmet>
+      <Seo
+        title="Page Not Found | Univerzo Music"
+        description="This page does not exist on Univerzo Music."
+        path="/404"
+        noindex
+      />
 
       <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/10 bg-white/6">
         <Compass className="h-8 w-8 text-brand" />

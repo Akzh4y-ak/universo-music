@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import TrackGrid from '../components/shared/TrackGrid';
 import { getGenreById, genres } from '../data/genres';
 import { useMusic } from '../context/music';
@@ -9,6 +9,7 @@ import { getDiscoveryTracks } from '../services/api';
 import TrackCard from '../components/shared/TrackCard';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import { filterExplicitTracks } from '../utils/catalog';
+import { SITE_NAME, SITE_URL, buildCanonicalUrl } from '../utils/seo';
 
 const GenrePage = () => {
   const { id } = useParams();
@@ -102,28 +103,35 @@ const GenrePage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>{genre.title} Songs & Trending Hits - Free Stream on Univerzo Music</title>
-        <meta name="description" content={`Listen to the best ${genre.title} music, hits, and trending tracks. ${genre.description} High-quality streaming with no sign-in.`} />
-        <meta name="keywords" content={`
-          ${genre.title}, 
-          ${genre.title} songs no ads, 
-          free ${genre.title} streaming, 
-          listen to ${genre.title} online free, 
-          ${genre.id === 'lo-fi' ? 'study music no ads, focus music for work,' : ''}
-          ${genre.id === 'party' ? 'party anthems no ads, dance music free,' : ''}
-          ${genre.id === 'devotional' ? 'spiritual music free, morning bhajans no ads,' : ''}
-          univerzo music ${genre.id}
-        `} />
-        <link rel="canonical" href={`https://universo-music.vercel.app/genre/${id}`} />
-        
-        {/* OpenGraph */}
-        <meta property="og:type" content="music.playlist" />
-        <meta property="og:url" content={`https://universo-music.vercel.app/genre/${id}`} />
-        <meta property="og:title" content={`${genre.title} Music & Hits - Univerzo`} />
-        <meta property="og:description" content={`Discover and play the top ${genre.title} tracks on Univerzo Music.`} />
-        <meta property="og:image" content={genre.image} />
-      </Helmet>
+      <Seo
+        title={`${genre.title} Songs | ${SITE_NAME}`}
+        description={`Discover ${genre.title} tracks, fresh catalog picks, and replay-ready listening on Univerzo Music. ${genre.description}`}
+        path={`/genre/${genre.id}`}
+        image={genre.image}
+        type="music.playlist"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Genres', path: '/trending' },
+          { name: genre.title, path: `/genre/${genre.id}` },
+        ]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: `${genre.title} songs`,
+          description: genre.description,
+          url: buildCanonicalUrl(`/genre/${genre.id}`),
+          image: genre.image,
+          isPartOf: {
+            '@type': 'WebSite',
+            name: SITE_NAME,
+            url: SITE_URL,
+          },
+          about: {
+            '@type': 'Thing',
+            name: genre.title,
+          },
+        }}
+      />
 
 
       <div className={`relative flex h-72 items-end overflow-hidden rounded-[28px] bg-gradient-to-br ${genre.gradient} p-8 shadow-lg`}>

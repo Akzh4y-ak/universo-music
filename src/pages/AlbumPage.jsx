@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Disc3, Play } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation, useParams } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -11,6 +11,7 @@ import { usePlayer } from '../context/player';
 import { searchTracks } from '../services/api';
 import { filterExplicitTracks } from '../utils/catalog';
 import { getTrackAlbumSlug, unslugifyValue } from '../utils/musicMeta';
+import { buildCanonicalUrl } from '../utils/seo';
 
 const AlbumPage = () => {
   const { slug } = useParams();
@@ -129,15 +130,30 @@ const AlbumPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>{albumName || 'Collection'} - Univerzo Music</title>
-        <meta name="description" content={`Explore the ${albumName} collection on Univerzo Music. High-quality streaming, no sign-in required.`} />
-        <meta property="og:title" content={`${albumName} - Collection on Univerzo`} />
-        <meta property="og:description" content={`Listen to the ${albumName} collection by ${artistName} on Univerzo Music.`} />
-        {heroImage && <meta property="og:image" content={heroImage} />}
-        <meta property="og:type" content="music.album" />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <Seo
+        title={`${albumName || 'Collection'} | ${artistName ? `${artistName} on ` : ''}Univerzo Music`}
+        description={`Explore ${albumName || 'this collection'}${artistName ? ` by ${artistName}` : ''} on Univerzo Music and jump into the closest matching tracks.`}
+        path={`/album/${slug}`}
+        image={heroImage}
+        type="music.album"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: albumName || 'Collection', path: `/album/${slug}` },
+        ]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'MusicAlbum',
+          name: albumName || 'Collection',
+          url: buildCanonicalUrl(`/album/${slug}`),
+          image: heroImage || undefined,
+          byArtist: artistName
+            ? {
+                '@type': 'MusicGroup',
+                name: artistName,
+              }
+            : undefined,
+        }}
+      />
 
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">

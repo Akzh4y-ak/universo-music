@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Disc3, Play } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation, useParams } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
@@ -11,6 +11,7 @@ import { usePlayer } from '../context/player';
 import { searchTracks } from '../services/api';
 import { filterExplicitTracks } from '../utils/catalog';
 import { getTrackArtistImage, getTrackArtistSlug, unslugifyValue } from '../utils/musicMeta';
+import { buildCanonicalUrl } from '../utils/seo';
 
 const ArtistPage = () => {
   const { slug } = useParams();
@@ -120,18 +121,25 @@ const ArtistPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>{artistName} - Stream Free Songs & Albums on Univerzo Music</title>
-        <meta name="description" content={`Listen to top tracks and latest releases by ${artistName} on Univerzo Music. High-quality free streaming, no ads, and no sign-in required. The best free alternative to explore ${artistName}'s discography.`} />
-        <meta name="keywords" content={`${artistName}, ${artistName} songs, ${artistName} free streaming, listen to ${artistName} online, no ads music, univerzo music`} />
-        <link rel="canonical" href={`https://universo-music.vercel.app/artist/${slug}`} />
-        
-        <meta property="og:title" content={`${artistName} - Artist on Univerzo Music`} />
-        <meta property="og:description" content={`Discover and play music from ${artistName} for free with no ads on Univerzo Music.`} />
-        {heroImage && <meta property="og:image" content={heroImage} />}
-        <meta property="og:type" content="music.playlist" />
-        <meta name="twitter:card" content="summary" />
-      </Helmet>
+      <Seo
+        title={`${artistName} | Artist Page on Univerzo Music`}
+        description={`Listen to songs, explore releases, and start playback from the ${artistName} catalog on Univerzo Music.`}
+        path={`/artist/${slug}`}
+        image={heroImage}
+        type="profile"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: artistName, path: `/artist/${slug}` },
+        ]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'MusicGroup',
+          name: artistName,
+          url: buildCanonicalUrl(`/artist/${slug}`),
+          image: heroImage || undefined,
+          description: `Artist catalog page for ${artistName} on Univerzo Music.`,
+        }}
+      />
 
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">

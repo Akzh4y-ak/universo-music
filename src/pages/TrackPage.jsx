@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { Play, Disc3, Calendar, Clock, Share2, Heart, LibraryBig } from 'lucide-react';
 import { getTrackById, searchTracks } from '../services/api';
+import Seo from '../components/seo/Seo';
 import { usePlayer } from '../context/player';
 import { useMusic } from '../context/music';
 import TrackCard from '../components/shared/TrackCard';
@@ -10,6 +10,8 @@ import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
 import { filterExplicitTracks } from '../utils/catalog';
+import { getTrackArtistSlug } from '../utils/musicMeta';
+import { buildCanonicalUrl, formatIsoDuration } from '../utils/seo';
 
 const TrackPage = () => {
   const { id } = useParams();
@@ -128,62 +130,46 @@ const TrackPage = () => {
     );
   }
 
+  const artistSlug = getTrackArtistSlug(track);
+  const trackPath = `/track/${id}`;
+  const trackUrl = buildCanonicalUrl(trackPath);
+  const artistUrl = buildCanonicalUrl(`/artist/${artistSlug}`);
+
   return (
     <div className="flex flex-col gap-12 pb-8">
-      <Helmet>
-        <title>{track.title} by {track.artist} - Free MP3 Stream on Univerzo Music</title>
-        <meta name="description" content={`Listen to ${track.title} by ${track.artist} on Univerzo Music. High-quality free streaming, no sign-in required, and no annoying ads. Your #1 destination for free music discovery.`} />
-        <meta name="keywords" content={`${track.title}, ${track.artist}, ${track.title} mp3, stream ${track.title} free, no ads music, ${track.artist} latest song, univerzo music`} />
-        <link rel="canonical" href={`https://universo-music.vercel.app/track/${id}`} />
-        
-        <meta property="og:title" content={`${track.title} - ${track.artist}`} />
-        <meta property="og:description" content={`Play ${track.title} instantly for free with no ads on Univerzo Music.`} />
-        <meta property="og:image" content={track.cover} />
-        <meta property="og:type" content="music.song" />
-        <meta name="twitter:card" content="summary_large_image" />
-        
-        {/* JSON-LD Structured Data for MusicRecording */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "MusicRecording",
-            "name": track.title,
-            "url": window.location.href,
-            "image": track.cover,
-            "datePublished": track.releaseDate,
-            "duration": `PT${Math.floor(track.durationSeconds / 60)}M${track.durationSeconds % 60}S`,
-            "byArtist": {
-              "@type": "MusicGroup",
-              "name": track.artist,
-              "url": `${window.location.origin}/artist/${track.artistSlug}`
-            },
-            "inAlbum": {
-              "@type": "MusicAlbum",
-              "name": track.album
-            },
-            "potentialAction": {
-              "@type": "ListenAction",
-              "target": [
-                {
-                  "@type": "EntryPoint",
-                  "urlTemplate": window.location.href,
-                  "actionPlatform": [
-                    "http://schema.org/DesktopWebPlatform",
-                    "http://schema.org/MobileWebPlatform",
-                    "http://schema.org/IOSPlatform",
-                    "http://schema.org/AndroidPlatform"
-                  ]
-                }
-              ],
-              "expectsAcceptanceOf": {
-                "@type": "Offer",
-                "category": "free",
-                "availability": "https://schema.org/InStock"
+      <Seo
+        title={`${track.title} by ${track.artist} | Univerzo Music`}
+        description={`Listen to ${track.title} by ${track.artist} on Univerzo Music and continue into related tracks from the same catalog.`}
+        path={trackPath}
+        image={track.cover}
+        type="music.song"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: track.artist, path: `/artist/${artistSlug}` },
+          { name: track.title, path: trackPath },
+        ]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'MusicRecording',
+          name: track.title,
+          url: trackUrl,
+          image: track.cover,
+          datePublished: track.releaseDate || undefined,
+          duration: formatIsoDuration(track.durationSeconds),
+          isFamilyFriendly: !track.isExplicit,
+          byArtist: {
+            '@type': 'MusicGroup',
+            name: track.artist,
+            url: artistUrl,
+          },
+          inAlbum: track.album
+            ? {
+                '@type': 'MusicAlbum',
+                name: track.album,
               }
-            }
-          })}
-        </script>
-      </Helmet>
+            : undefined,
+        }}
+      />
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div 
@@ -212,7 +198,7 @@ const TrackPage = () => {
               </div>
               <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{track.title}</h1>
               <Link 
-                to={`/artist/${track.artistSlug}`}
+                to={`/artist/${artistSlug}`}
                 className="inline-block text-lg font-bold text-text-subdued transition-colors hover:text-white hover:underline"
               >
                 {track.artist}

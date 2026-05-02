@@ -4,42 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
     
-    <!-- Primary Meta Tags -->
-    <title>Univerzo Music - Free Ad-Free Music Streaming App</title>
-    <meta name="title" content="Univerzo Music - Free Ad-Free Music Streaming App" />
-    <meta name="description" content="Listen to millions of songs online for free without ads or sign-ups. Univerzo Music is the ultimate ad-free music player. Stream trending hits, playlists, and artists instantly." />
-    <meta name="keywords" content="free music streaming online, ad-free music player, listen to music without sign up, spotify alternative free, trending songs online, free mp3 streaming, no ads music web app, univerzo music" />
+    <title>Univerzo Music | Free Music Streaming Without Sign-in</title>
+    <meta name="description" content="Stream trending songs, genre mixes, and artist discoveries on Univerzo Music. Listen instantly in your browser without a sign-in wall." />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://universo-music.vercel.app/" />
-    <meta property="og:title" content="Univerzo Music - Free Ad-Free Music Streaming App" />
-    <meta property="og:description" content="Listen to millions of songs online for free without ads or sign-ups. Stream trending hits, playlists, and artists instantly." />
+    <meta property="og:title" content="Univerzo Music | Free Music Streaming Without Sign-in" />
+    <meta property="og:description" content="Stream trending songs, genre mixes, and artist discoveries on Univerzo Music." />
     <meta property="og:image" content="https://universo-music.vercel.app/og-image.png" />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://universo-music.vercel.app/" />
-    <meta property="twitter:title" content="Univerzo Music - Free Ad-Free Music Streaming App" />
-    <meta property="twitter:description" content="Listen to millions of songs online for free without ads or sign-ups. Stream trending hits, playlists, and artists instantly." />
-    <meta property="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Univerzo Music | Free Music Streaming Without Sign-in" />
+    <meta name="twitter:description" content="Stream trending songs, genre mixes, and artist discoveries on Univerzo Music." />
+    <meta name="twitter:image" content="https://universo-music.vercel.app/og-image.png" />
 
-    <!-- Schema.org / JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": ["WebApplication", "WebSite"],
+      "@type": "WebSite",
       "name": "Univerzo Music",
       "url": "https://universo-music.vercel.app/",
-      "description": "An ad-free music streaming platform with access to millions of songs without requiring a login.",
-      "applicationCategory": "MultimediaApplication",
-      "genre": "Music",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://universo-music.vercel.app/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
       }
     }
     </script>

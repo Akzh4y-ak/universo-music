@@ -1,9 +1,10 @@
 import { Clock3, ShieldCheck, SlidersHorizontal, Volume2, Check, MessageSquare, Heart } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
+import Seo from '../components/seo/Seo';
 import { useMusic } from '../context/music';
 import { usePlayer, usePlayerProgress } from '../context/player';
 import { LANGUAGES, GENRES } from '../data/preferences';
 import ShareButton from '../components/shared/ShareButton';
+import { SITE_URL } from '../utils/seo';
 
 const timerOptions = [15, 30, 45, 60];
 
@@ -42,9 +43,12 @@ const SettingsPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>Settings - Univerzo Music</title>
-      </Helmet>
+      <Seo
+        title="Settings | Univerzo Music"
+        description="Playback, content, and library preferences for Univerzo Music."
+        path="/settings"
+        noindex
+      />
 
       <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(30,215,96,0.18),_transparent_36%),linear-gradient(135deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.03))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
         <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -333,7 +337,7 @@ const SettingsPage = () => {
             <ShareButton 
               title="Univerzo Music"
               text="Listen to millions of tracks for free on Univerzo Music. No sign-in required!"
-              url={window.location.origin}
+              url={SITE_URL}
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-white/5 py-3 text-sm font-bold text-white hover:bg-white/10"
             />
           </div>

@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { searchTracks } from '../services/api';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import { usePlayer } from '../context/player';
 import { useMusic } from '../context/music';
 import { Play, Trash2 } from 'lucide-react';
@@ -13,6 +13,7 @@ import { filterExplicitTracks } from '../utils/catalog';
 import { featuredPlaylists } from '../data/featuredPlaylists';
 import { unslugifyValue } from '../utils/musicMeta';
 import ShareButton from '../components/shared/ShareButton';
+import { buildCanonicalUrl } from '../utils/seo';
 
 const PlaylistPage = () => {
   const { slug } = useParams();
@@ -41,6 +42,8 @@ const PlaylistPage = () => {
     || featuredPlaylist?.description
     || `A curated dynamic playlist for ${title.toLowerCase()}.`;
   const heroCover = featuredPlaylist?.cover || '';
+  const playlistPath = `/playlist/${slug}`;
+  const isPublicPlaylist = Boolean(featuredPlaylist);
 
   useEffect(() => {
     setDraftTitle(savedPlaylist?.title || '');
@@ -128,10 +131,28 @@ const PlaylistPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>{title} - Univerzo Playlists</title>
-        <meta name="description" content={`Listen to the ${title} playlist on Univerzo. Discover and stream top songs right now.`} />
-      </Helmet>
+      <Seo
+        title={`${title} Playlist | Univerzo Music`}
+        description={description}
+        path={playlistPath}
+        image={heroCover}
+        type="music.playlist"
+        noindex={!isPublicPlaylist}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: title, path: playlistPath },
+        ]}
+        structuredData={isPublicPlaylist
+          ? {
+              '@context': 'https://schema.org',
+              '@type': 'CollectionPage',
+              name: title,
+              description,
+              url: buildCanonicalUrl(playlistPath),
+              image: heroCover || undefined,
+            }
+          : []}
+      />
 
 
       <div className="flex flex-col items-end gap-6 border-b border-white/10 pt-10 pb-6 md:flex-row">
@@ -171,7 +192,7 @@ const PlaylistPage = () => {
         <ShareButton 
           title={`${title} - Univerzo Music`}
           text={`Check out the ${title} playlist on Univerzo Music!`}
-          url={window.location.href}
+          url={buildCanonicalUrl(playlistPath)}
           className="h-12 w-12 rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"
         />
 

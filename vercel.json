@@ -1,8 +1,20 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/search", "destination": "/index.html" },
+    { "source": "/trending", "destination": "/index.html" },
+    { "source": "/liked", "destination": "/index.html" },
+    { "source": "/recent", "destination": "/index.html" },
+    { "source": "/playlists", "destination": "/index.html" },
+    { "source": "/library", "destination": "/index.html" },
+    { "source": "/playlist/:slug", "destination": "/index.html" },
+    { "source": "/artist/:slug", "destination": "/index.html" },
+    { "source": "/album/:slug", "destination": "/index.html" },
+    { "source": "/genre/:id", "destination": "/index.html" },
+    { "source": "/track/:id", "destination": "/index.html" },
+    { "source": "/now-playing", "destination": "/index.html" },
+    { "source": "/settings", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" }
   ]
 }

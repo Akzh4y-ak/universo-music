@@ -1,6 +1,6 @@
-import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Heart, Clock, Library, SlidersHorizontal, Settings, MessageSquare } from 'lucide-react';
+import Seo from '../components/seo/Seo';
 import { useMusic } from '../context/music';
 
 const LibraryPage = () => {
@@ -8,9 +8,12 @@ const LibraryPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-32 md:pb-8">
-      <Helmet>
-        <title>Your Library - Univerzo Music</title>
-      </Helmet>
+      <Seo
+        title="Your Library | Univerzo Music"
+        description="Personal library and listening history in Univerzo Music."
+        path="/library"
+        noindex
+      />
 
       <header className="flex items-center justify-between pt-4">
         <h1 className="text-3xl font-black tracking-tight text-white">Your Library</h1>

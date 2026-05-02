@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Disc3, ListMusic, Mic2, Play, Search } from 'lucide-react';
-import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
+import Seo from '../components/seo/Seo';
 import TrackCard from '../components/shared/TrackCard';
 import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
@@ -18,7 +18,8 @@ import {
 } from '../utils/catalog';
 
 const SearchPage = () => {
-  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,14 @@ const SearchPage = () => {
   const featuredGenres = featuredGenreIds
     .map((genreId) => genres.find((genre) => genre.id === genreId))
     .filter(Boolean);
+
+  useEffect(() => {
+    const nextQuery = searchParams.get('q') || '';
+
+    if (nextQuery !== query) {
+      setQuery(nextQuery);
+    }
+  }, [query, searchParams]);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(query), 600);
@@ -132,10 +141,12 @@ const SearchPage = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <Helmet>
-        <title>{query ? `Search: ${query}` : 'Search'} - Univerzo Music</title>
-        <meta name="description" content="Search for your favorite tracks, artists, and playlists globally on Univerzo." />
-      </Helmet>
+      <Seo
+        title={query ? `${query} Search Results | Univerzo Music` : 'Search Music Catalog | Univerzo Music'}
+        description="Search tracks, artists, and collections inside the Univerzo Music catalog."
+        path="/search"
+        noindex
+      />
 
 
       <div className="sticky top-0 z-30 pt-4 pb-4 bg-bg-base/90 backdrop-blur-md">
@@ -148,7 +159,16 @@ const SearchPage = () => {
             className="block w-full pl-10 pr-3 py-3 border-none rounded-full leading-5 bg-white text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand sm:text-sm font-medium shadow-md transition-shadow"
             placeholder="Search any song or artist..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              const nextQuery = e.target.value;
+              setQuery(nextQuery);
+
+              if (nextQuery.trim()) {
+                setSearchParams({ q: nextQuery }, { replace: true });
+              } else {
+                setSearchParams({}, { replace: true });
+              }
+            }}
           />
         </div>
       </div>
