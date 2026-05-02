@@ -37,13 +37,16 @@ function injectRouteMeta(template, route) {
         `<script type="application/ld+json">${JSON.stringify(item)}</script>`,
     )
     .join('');
+  const bootstrapScript = route.bootstrapData
+    ? `<script>window.__UNIVERZO_SEO_BOOTSTRAP__=${JSON.stringify({ path: route.path, ...route.bootstrapData })};</script>`
+    : '';
 
   html = html.replace(
     '</head>',
     `<meta name="robots" content="index,follow,max-image-preview:large" /><link rel="canonical" href="${canonicalUrl}" />${structuredDataScripts}</head>`,
   );
 
-  return html.replace('<div id="root"></div>', `<div id="root">${route.bodyHtml}</div>`);
+  return html.replace('<div id="root"></div>', `<div id="root">${route.bodyHtml}</div>${bootstrapScript}`);
 }
 
 async function writeRoute(distDir, route, template) {

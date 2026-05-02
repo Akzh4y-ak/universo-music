@@ -303,6 +303,36 @@ const Home = () => {
         onClose={() => setIsCustomizing(false)} 
       />
 
+      <section className="grid gap-4 md:grid-cols-3">
+        {[
+          {
+            title: 'Browse Artists',
+            description: 'Open public artist pages built for discovery and direct search entry.',
+            to: '/artists',
+          },
+          {
+            title: 'Browse Albums',
+            description: 'Jump into album and collection pages instead of only landing on singles.',
+            to: '/albums',
+          },
+          {
+            title: 'Browse Tracks',
+            description: 'Explore public track pages connected to artist and album routes.',
+            to: '/tracks',
+          },
+        ].map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="group rounded-3xl border border-white/8 bg-white/4 p-6 transition-colors hover:bg-white/8"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-brand">SEO Surface</p>
+            <h2 className="mt-3 text-2xl font-bold text-white group-hover:text-brand">{item.title}</h2>
+            <p className="mt-3 text-sm leading-6 text-text-muted">{item.description}</p>
+          </Link>
+        ))}
+      </section>
+
       {visibleDiscoveryMix.length > 0 ? (
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand/20 to-purple-500/10 p-1">
           <div className="rounded-[22px] bg-bg-base/60 p-6 backdrop-blur-md">

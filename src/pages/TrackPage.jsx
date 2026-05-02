@@ -10,18 +10,31 @@ import TrackGrid from '../components/shared/TrackGrid';
 import SkeletonCard from '../components/shared/SkeletonCard';
 import CatalogFeedback from '../components/shared/CatalogFeedback';
 import { filterExplicitTracks } from '../utils/catalog';
-import { getTrackArtistSlug } from '../utils/musicMeta';
+import { getInitialRouteTracks, getInitialTrack } from '../services/seoSnapshot';
+import { getTrackAlbumSlug, getTrackArtistSlug } from '../utils/musicMeta';
 import { buildCanonicalUrl, formatIsoDuration } from '../utils/seo';
 
 const TrackPage = () => {
   const { id } = useParams();
-  const [track, setTrack] = useState(null);
-  const [similarTracks, setSimilarTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const initialTrack = useMemo(() => getInitialTrack(id), [id]);
+  const initialSimilarTracks = useMemo(() => {
+    return getInitialRouteTracks().filter((candidate) => candidate.id !== id);
+  }, [id]);
+  const [track, setTrack] = useState(initialTrack);
+  const [similarTracks, setSimilarTracks] = useState(initialSimilarTracks);
+  const [loading, setLoading] = useState(!initialTrack);
   const [error, setError] = useState('');
   
   const { currentTrack, isPlaying, playTrack, togglePlay } = usePlayer();
   const { isLiked, toggleLike, isTrackInAnyPlaylist, saveTrackToPlaylist, preferences } = useMusic();
+  const hasBootstrapTrack = Boolean(initialTrack);
+
+  useEffect(() => {
+    setTrack(initialTrack);
+    setSimilarTracks(initialSimilarTracks);
+    setLoading(!initialTrack);
+    setError('');
+  }, [initialSimilarTracks, initialTrack]);
 
   const isCurrentTrack = currentTrack?.id === track?.id;
   const liked = track ? isLiked(track.id) : false;
@@ -31,7 +44,7 @@ const TrackPage = () => {
     let cancelled = false;
 
     const fetchTrackData = async () => {
-      setLoading(true);
+      setLoading(!hasBootstrapTrack);
       setError('');
       
       try {
@@ -40,20 +53,25 @@ const TrackPage = () => {
         if (cancelled) return;
 
         if (!trackData) {
-          setError('We could not find this track in the catalog.');
+          if (!hasBootstrapTrack) {
+            setError('We could not find this track in the catalog.');
+          }
           setLoading(false);
           return;
         }
 
-        setTrack(trackData);
+        setTrack((previous) => (previous ? { ...previous, ...trackData } : trackData));
 
         // Fetch similar tracks (same artist or genre)
         const moreResults = await searchTracks(trackData.artist, 12);
         if (!cancelled) {
-          setSimilarTracks(moreResults.filter(t => t.id !== trackData.id));
+          const nextSimilarTracks = moreResults.filter((candidate) => candidate.id !== trackData.id);
+          if (nextSimilarTracks.length > 0 || initialSimilarTracks.length === 0) {
+            setSimilarTracks(nextSimilarTracks);
+          }
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!cancelled && !hasBootstrapTrack) {
           setError(err.message || 'An error occurred while loading the track.');
         }
       } finally {
@@ -68,7 +86,7 @@ const TrackPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [hasBootstrapTrack, id, initialSimilarTracks.length]);
 
   const handlePlay = () => {
     if (isCurrentTrack) {
@@ -131,6 +149,7 @@ const TrackPage = () => {
   }
 
   const artistSlug = getTrackArtistSlug(track);
+  const albumSlug = getTrackAlbumSlug(track);
   const trackPath = `/track/${id}`;
   const trackUrl = buildCanonicalUrl(trackPath);
   const artistUrl = buildCanonicalUrl(`/artist/${artistSlug}`);
@@ -219,7 +238,17 @@ const TrackPage = () => {
               {track.album && (
                 <div className="flex items-center gap-2">
                   <Disc3 className="h-4 w-4" />
-                  <span className="truncate max-w-[200px]">{track.album}</span>
+                  {albumSlug ? (
+                    <Link
+                      to={`/album/${albumSlug}`}
+                      state={{ albumName: track.album, artistName: track.artist, seedTrack: track }}
+                      className="truncate max-w-[200px] transition-colors hover:text-white hover:underline"
+                    >
+                      {track.album}
+                    </Link>
+                  ) : (
+                    <span className="truncate max-w-[200px]">{track.album}</span>
+                  )}
                 </div>
               )}
             </div>

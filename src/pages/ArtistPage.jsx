@@ -9,6 +9,7 @@ import TrackGrid from '../components/shared/TrackGrid';
 import { useMusic } from '../context/music';
 import { usePlayer } from '../context/player';
 import { searchTracks } from '../services/api';
+import { getInitialArtist, getInitialRouteTracks } from '../services/seoSnapshot';
 import { filterExplicitTracks } from '../utils/catalog';
 import { getTrackArtistImage, getTrackArtistSlug, unslugifyValue } from '../utils/musicMeta';
 import { buildCanonicalUrl } from '../utils/seo';
@@ -18,24 +19,39 @@ const ArtistPage = () => {
   const location = useLocation();
   const { preferences } = useMusic();
   const { playTrack } = usePlayer();
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const initialArtist = useMemo(() => getInitialArtist(slug), [slug]);
+  const initialTracks = useMemo(() => {
+    return getInitialRouteTracks().filter((track) => getTrackArtistSlug(track) === slug);
+  }, [slug]);
+  const [tracks, setTracks] = useState(initialTracks);
+  const [loading, setLoading] = useState(initialTracks.length === 0);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialTracks.length >= 20);
   const [error, setError] = useState('');
 
   const seedTrack = location.state?.seedTrack || null;
-  const artistName = location.state?.artistName || seedTrack?.artist || unslugifyValue(slug || '');
+  const hasBootstrapTracks = initialTracks.length > 0;
+  const artistName = initialArtist?.name || location.state?.artistName || seedTrack?.artist || unslugifyValue(slug || '');
+  const artistSummary = initialArtist?.summary || `Listen to songs, explore releases, and start playback from the ${artistName} catalog on Univerzo Music.`;
+
+  useEffect(() => {
+    setTracks(initialTracks);
+    setLoading(initialTracks.length === 0);
+    setLoadingMore(false);
+    setPage(0);
+    setHasMore(initialTracks.length >= 20);
+    setError('');
+  }, [initialTracks]);
 
   useEffect(() => {
     let cancelled = false;
 
     const fetchArtist = async () => {
-      setLoading(true);
+      setLoading(!hasBootstrapTracks);
       setError('');
       setPage(0);
-      setHasMore(true);
+      setHasMore(hasBootstrapTracks ? initialTracks.length >= 20 : true);
 
       try {
         const results = await searchTracks(artistName, 50, 0);
@@ -46,18 +62,19 @@ const ArtistPage = () => {
         }
 
         const finalResults = directMatches.length > 0 ? directMatches : results;
-        setTracks(finalResults);
-        
-        if (finalResults.length < 20) {
-          setHasMore(false);
+        if (finalResults.length > 0 || !hasBootstrapTracks) {
+          setTracks(finalResults);
         }
+        setHasMore(finalResults.length >= 20);
       } catch (nextError) {
         if (cancelled) {
           return;
         }
 
-        setTracks([]);
-        setError(nextError.message || 'Unable to load this artist right now.');
+        if (!hasBootstrapTracks) {
+          setTracks([]);
+          setError(nextError.message || 'Unable to load this artist right now.');
+        }
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -70,10 +87,10 @@ const ArtistPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [artistName, slug]);
+  }, [artistName, hasBootstrapTracks, initialTracks.length, slug]);
 
   const handleLoadMore = async () => {
-    if (loadingMore || !hasMore) return;
+    if (loadingMore || !hasMore || !artistName) return;
     
     setLoadingMore(true);
     const nextPage = page + 1;
@@ -86,11 +103,12 @@ const ArtistPage = () => {
       if (finalResults.length === 0) {
         setHasMore(false);
       } else {
-        setTracks(prev => [...prev, ...finalResults]);
+        setTracks((previous) => {
+          const seenTrackIds = new Set(previous.map((track) => track.id));
+          return [...previous, ...finalResults.filter((track) => !seenTrackIds.has(track.id))];
+        });
         setPage(nextPage);
-        if (finalResults.length < 20) {
-          setHasMore(false);
-        }
+        setHasMore(finalResults.length >= 20);
       }
     } catch (err) {
       console.error('Artist load more error:', err);
@@ -100,8 +118,8 @@ const ArtistPage = () => {
   };
 
   const heroImage = useMemo(() => {
-    return getTrackArtistImage(seedTrack) || getTrackArtistImage(tracks[0]) || seedTrack?.cover || tracks[0]?.cover || '';
-  }, [seedTrack, tracks]);
+    return initialArtist?.image || getTrackArtistImage(seedTrack) || getTrackArtistImage(tracks[0]) || seedTrack?.cover || tracks[0]?.cover || '';
+  }, [initialArtist?.image, seedTrack, tracks]);
 
   const visibleTracks = useMemo(() => {
     return filterExplicitTracks(tracks, preferences.allowExplicit);
@@ -123,7 +141,7 @@ const ArtistPage = () => {
     <div className="flex flex-col gap-8 pb-8">
       <Seo
         title={`${artistName} | Artist Page on Univerzo Music`}
-        description={`Listen to songs, explore releases, and start playback from the ${artistName} catalog on Univerzo Music.`}
+        description={artistSummary}
         path={`/artist/${slug}`}
         image={heroImage}
         type="profile"
@@ -137,7 +155,7 @@ const ArtistPage = () => {
           name: artistName,
           url: buildCanonicalUrl(`/artist/${slug}`),
           image: heroImage || undefined,
-          description: `Artist catalog page for ${artistName} on Univerzo Music.`,
+          description: artistSummary,
         }}
       />
 
@@ -159,7 +177,7 @@ const ArtistPage = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-brand">Artist</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{artistName}</h1>
             <p className="max-w-2xl text-sm text-text-subdued sm:text-base">
-              Live catalog tracks and quick-play discovery for this artist.
+              {artistSummary}
             </p>
             <div className="flex items-center gap-4">
               <button

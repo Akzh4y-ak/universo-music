@@ -9,6 +9,7 @@ import TrackGrid from '../components/shared/TrackGrid';
 import { useMusic } from '../context/music';
 import { usePlayer } from '../context/player';
 import { searchTracks } from '../services/api';
+import { getInitialAlbum, getInitialRouteTracks } from '../services/seoSnapshot';
 import { filterExplicitTracks } from '../utils/catalog';
 import { getTrackAlbumSlug, unslugifyValue } from '../utils/musicMeta';
 import { buildCanonicalUrl } from '../utils/seo';
@@ -18,16 +19,32 @@ const AlbumPage = () => {
   const location = useLocation();
   const { preferences } = useMusic();
   const { playTrack } = usePlayer();
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const initialAlbum = useMemo(() => getInitialAlbum(slug), [slug]);
+  const initialTracks = useMemo(() => {
+    return getInitialRouteTracks().filter((track) => getTrackAlbumSlug(track) === slug);
+  }, [slug]);
+  const [tracks, setTracks] = useState(initialTracks);
+  const [loading, setLoading] = useState(initialTracks.length === 0 && !initialAlbum);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(initialTracks.length >= 20);
   const [error, setError] = useState('');
 
   const seedTrack = location.state?.seedTrack || null;
-  const artistName = location.state?.artistName || seedTrack?.artist || '';
-  const albumName = location.state?.albumName || seedTrack?.album || unslugifyValue(slug || '');
+  const hasBootstrapContent = initialTracks.length > 0 || Boolean(initialAlbum);
+  const artistName = location.state?.artistName || seedTrack?.artist || initialAlbum?.artist || '';
+  const albumName = location.state?.albumName || seedTrack?.album || initialAlbum?.title || unslugifyValue(slug || '');
+  const albumSummary = initialAlbum?.summary
+    || `Explore ${albumName || 'this collection'}${artistName ? ` by ${artistName}` : ''} on Univerzo Music and jump into the closest matching tracks.`;
+
+  useEffect(() => {
+    setTracks(initialTracks);
+    setLoading(initialTracks.length === 0 && !initialAlbum);
+    setLoadingMore(false);
+    setPage(0);
+    setHasMore(initialTracks.length >= 20);
+    setError('');
+  }, [initialAlbum, initialTracks]);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,13 +53,14 @@ const AlbumPage = () => {
       if (!albumName) {
         setTracks([]);
         setLoading(false);
+        setHasMore(false);
         return;
       }
 
-      setLoading(true);
+      setLoading(!hasBootstrapContent);
       setError('');
       setPage(0);
-      setHasMore(true);
+      setHasMore(hasBootstrapContent ? initialTracks.length >= 20 : true);
 
       try {
         const query = `${artistName} ${albumName}`.trim();
@@ -54,18 +72,19 @@ const AlbumPage = () => {
         }
 
         const finalResults = directMatches.length > 0 ? directMatches : results;
-        setTracks(finalResults);
-        
-        if (finalResults.length < 20) {
-          setHasMore(false);
+        if (finalResults.length > 0 || !hasBootstrapContent) {
+          setTracks(finalResults);
         }
+        setHasMore(finalResults.length >= 20);
       } catch (nextError) {
         if (cancelled) {
           return;
         }
 
-        setTracks([]);
-        setError(nextError.message || 'Unable to load this collection right now.');
+        if (!hasBootstrapContent) {
+          setTracks([]);
+          setError(nextError.message || 'Unable to load this collection right now.');
+        }
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -78,7 +97,7 @@ const AlbumPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [albumName, artistName, slug]);
+  }, [albumName, artistName, hasBootstrapContent, initialTracks.length, slug]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore || !albumName) return;
@@ -95,11 +114,12 @@ const AlbumPage = () => {
       if (finalResults.length === 0) {
         setHasMore(false);
       } else {
-        setTracks(prev => [...prev, ...finalResults]);
+        setTracks((previous) => {
+          const seenTrackIds = new Set(previous.map((track) => track.id));
+          return [...previous, ...finalResults.filter((track) => !seenTrackIds.has(track.id))];
+        });
         setPage(nextPage);
-        if (finalResults.length < 20) {
-          setHasMore(false);
-        }
+        setHasMore(finalResults.length >= 20);
       }
     } catch (err) {
       console.error('Album load more error:', err);
@@ -109,8 +129,8 @@ const AlbumPage = () => {
   };
 
   const heroImage = useMemo(() => {
-    return seedTrack?.cover || tracks[0]?.cover || '';
-  }, [seedTrack, tracks]);
+    return initialAlbum?.cover || seedTrack?.cover || tracks[0]?.cover || '';
+  }, [initialAlbum?.cover, seedTrack, tracks]);
 
   const visibleTracks = useMemo(() => {
     return filterExplicitTracks(tracks, preferences.allowExplicit);
@@ -132,7 +152,7 @@ const AlbumPage = () => {
     <div className="flex flex-col gap-8 pb-8">
       <Seo
         title={`${albumName || 'Collection'} | ${artistName ? `${artistName} on ` : ''}Univerzo Music`}
-        description={`Explore ${albumName || 'this collection'}${artistName ? ` by ${artistName}` : ''} on Univerzo Music and jump into the closest matching tracks.`}
+        description={albumSummary}
         path={`/album/${slug}`}
         image={heroImage}
         type="music.album"
@@ -152,6 +172,7 @@ const AlbumPage = () => {
                 name: artistName,
               }
             : undefined,
+          description: albumSummary,
         }}
       />
 
@@ -173,7 +194,7 @@ const AlbumPage = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-brand">Collection</p>
             <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{albumName || 'Untitled Collection'}</h1>
             <p className="max-w-2xl text-sm leading-7 text-text-muted md:text-base">
-              {artistName ? `${artistName} and related tracks.` : 'Related tracks.'}
+              {albumSummary}
             </p>
             <div className="flex items-center gap-4">
               <button

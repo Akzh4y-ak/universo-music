@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
+    { "source": "/artists", "destination": "/index.html" },
+    { "source": "/albums", "destination": "/index.html" },
+    { "source": "/tracks", "destination": "/index.html" },
     { "source": "/search", "destination": "/index.html" },
     { "source": "/trending", "destination": "/index.html" },
     { "source": "/liked", "destination": "/index.html" },

@@ -1,10 +1,10 @@
-import { getMusicProviderInfo } from '../config/music';
+import { getMusicProviderInfo } from '../config/music.js';
 import {
   searchJioSaavnTracks,
   getJioSaavnDiscoveryTracks,
   getJioSaavnTrendingTracks,
   getJioSaavnTrackDetails,
-} from './providers/jiosaavn';
+} from './providers/jiosaavn.js';
 
 export function getCatalogStatus() {
   return getMusicProviderInfo();

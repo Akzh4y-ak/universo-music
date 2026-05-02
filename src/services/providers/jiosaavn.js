@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { slugifyValue } from '../../utils/musicMeta';
+import { slugifyValue } from '../../utils/musicMeta.js';
 
 // Public JioSaavn API wrapper instance
 const JIOSAAVN_API_ROOT = 'https://jiosaavn-api-privatecvc2.vercel.app';

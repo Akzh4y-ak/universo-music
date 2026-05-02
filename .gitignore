@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+public/seo-snapshot.json
+scripts/generated/
 
 # Editor directories and files
 .vscode/*

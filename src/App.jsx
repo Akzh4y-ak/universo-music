@@ -27,6 +27,9 @@ function lazyRoute(routeKey, importer) {
 }
 
 const Home = lazyRoute('home', () => import('./pages/Home'));
+const ArtistsDirectoryPage = lazyRoute('artists-directory', () => import('./pages/ArtistsDirectoryPage'));
+const AlbumsDirectoryPage = lazyRoute('albums-directory', () => import('./pages/AlbumsDirectoryPage'));
+const TracksDirectoryPage = lazyRoute('tracks-directory', () => import('./pages/TracksDirectoryPage'));
 const SearchPage = lazyRoute('search', () => import('./pages/SearchPage'));
 const TrendingPage = lazyRoute('trending', () => import('./pages/TrendingPage'));
 const LikedSongs = lazyRoute('liked', () => import('./pages/LikedSongs'));
@@ -79,6 +82,9 @@ function App() {
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Home />} />
+                  <Route path="artists" element={<ArtistsDirectoryPage />} />
+                  <Route path="albums" element={<AlbumsDirectoryPage />} />
+                  <Route path="tracks" element={<TracksDirectoryPage />} />
                   <Route path="search" element={<SearchPage />} />
                   <Route path="trending" element={<TrendingPage />} />
                   <Route path="liked" element={<LikedSongs />} />
