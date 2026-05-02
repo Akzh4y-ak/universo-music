@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/layout/Layout';
+import LoadingScreen from './components/shared/LoadingScreen';
 
 function lazyRoute(routeKey, importer) {
   return lazy(async () => {
@@ -79,7 +80,7 @@ function App() {
       <Router>
         <MusicProvider>
           <PlayerProvider>
-            <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-black text-brand text-2xl animate-pulse">Loading Univerzo...</div>}>
+            <Suspense fallback={<LoadingScreen />}>
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Home />} />
