@@ -12,7 +12,8 @@ import { searchTracks } from '../services/api';
 import { getInitialArtist, getInitialRouteTracks } from '../services/seoSnapshot';
 import { filterExplicitTracks } from '../utils/catalog';
 import { getTrackArtistImage, getTrackArtistSlug, unslugifyValue } from '../utils/musicMeta';
-import { buildCanonicalUrl } from '../utils/seo';
+import { buildCanonicalUrl, buildBreadcrumbStructuredData } from '../utils/seo';
+import { buildArtistSchema } from '../utils/musicSchema';
 
 const ArtistPage = () => {
   const { slug } = useParams();
@@ -149,14 +150,12 @@ const ArtistPage = () => {
           { name: 'Home', path: '/' },
           { name: artistName, path: `/artist/${slug}` },
         ]}
-        structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'MusicGroup',
-          name: artistName,
+        structuredData={buildArtistSchema({
+          artistName: artistName,
           url: buildCanonicalUrl(`/artist/${slug}`),
-          image: heroImage || undefined,
+          image: heroImage,
           description: artistSummary,
-        }}
+        })}
       />
 
 

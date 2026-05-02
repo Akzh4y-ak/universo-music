@@ -1,4 +1,40 @@
+# Robots.txt for Univerzo Music - Music Discovery Platform
+# Allow all search engines to crawl the site
+
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /settings
+Disallow: /api/
+Allow: /api/public/
 
+# Crawl delay for performance optimization
+Crawl-delay: 1
+
+# Request rate limit
+Request-rate: 30/60
+
+# Sitemaps - Primary and mirrors
 Sitemap: https://universo-music.vercel.app/sitemap.xml
+Sitemap: https://univerzo-music.vercel.app/sitemap-artists.xml
+Sitemap: https://univerzo-music.vercel.app/sitemap-albums.xml
+Sitemap: https://univerzo-music.vercel.app/sitemap-tracks.xml
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Allow: /api/public/
+Crawl-delay: 0
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Crawl-delay: 1
+
+# Specific rules for Yandex
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 1

@@ -13,6 +13,7 @@ import { filterExplicitTracks } from '../utils/catalog';
 import { getInitialRouteTracks, getInitialTrack } from '../services/seoSnapshot';
 import { getTrackAlbumSlug, getTrackArtistSlug } from '../utils/musicMeta';
 import { buildCanonicalUrl, formatIsoDuration } from '../utils/seo';
+import { buildMusicRecordingSchema, buildAudioSchema } from '../utils/musicSchema';
 
 const TrackPage = () => {
   const { id } = useParams();
@@ -167,27 +168,26 @@ const TrackPage = () => {
           { name: track.artist, path: `/artist/${artistSlug}` },
           { name: track.title, path: trackPath },
         ]}
-        structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'MusicRecording',
-          name: track.title,
-          url: trackUrl,
-          image: track.cover,
-          datePublished: track.releaseDate || undefined,
-          duration: formatIsoDuration(track.durationSeconds),
-          isFamilyFriendly: !track.isExplicit,
-          byArtist: {
-            '@type': 'MusicGroup',
-            name: track.artist,
-            url: artistUrl,
-          },
-          inAlbum: track.album
-            ? {
-                '@type': 'MusicAlbum',
-                name: track.album,
-              }
-            : undefined,
-        }}
+        structuredData={[
+          buildMusicRecordingSchema({
+            trackName: track.title,
+            artist: track.artist,
+            albumName: track.album,
+            duration: track.durationSeconds,
+            datePublished: track.releaseDate,
+            url: trackUrl,
+            image: track.cover,
+            description: `Listen to ${track.title} by ${track.artist} on Univerzo Music`,
+          }),
+          buildAudioSchema({
+            trackName: track.title,
+            artist: track.artist,
+            url: trackUrl,
+            duration: track.durationSeconds,
+            uploadDate: track.releaseDate,
+            description: `Listen to ${track.title} by ${track.artist}`,
+          }),
+        ]}
       />
 
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
