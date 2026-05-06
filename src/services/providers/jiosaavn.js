@@ -176,7 +176,7 @@ function getBestImage(imageArray) {
 
   // Pick highest quality (last item is usually 500x500)
   const best = imageArray[imageArray.length - 1];
-  return best?.link || FALLBACK_COVER;
+  return best?.link || best?.url || FALLBACK_COVER;
 }
 
 function getBestStreamUrl(downloadUrlArray) {
@@ -188,13 +188,25 @@ function getBestStreamUrl(downloadUrlArray) {
   const preferred = ['320kbps', '160kbps', '96kbps', '48kbps', '12kbps'];
   for (const quality of preferred) {
     const match = downloadUrlArray.find((item) => item.quality === quality);
-    if (match?.link) {
-      return match.link;
+    if (match?.link || match?.url) {
+      return match.link || match.url;
     }
   }
 
   // Fallback to last available
-  return downloadUrlArray[downloadUrlArray.length - 1]?.link || '';
+  const fallback = downloadUrlArray[downloadUrlArray.length - 1];
+  return fallback?.link || fallback?.url || '';
+}
+
+function extractArtists(track) {
+  if (track.primaryArtists) return track.primaryArtists;
+  if (track.artists?.primary?.length > 0) {
+    return track.artists.primary.map((a) => a.name).join(', ');
+  }
+  if (track.artists?.all?.length > 0) {
+    return track.artists.all.map((a) => a.name).join(', ');
+  }
+  return 'Unknown Artist';
 }
 
 function normalizeText(value = '') {
@@ -207,16 +219,16 @@ function normalizeText(value = '') {
 function buildFallbackTrackId(track) {
   const fallbackKey = slugifyValue([
     track.name || 'track',
-    track.primaryArtists || 'artist',
-    track.album?.name || '',
+    extractArtists(track),
+    track.album?.name || track.album || '',
   ].join('-'));
 
   return `saavn-${fallbackKey || 'track'}`;
 }
 
 function normalizeJioSaavnTrack(track) {
-  const artistName = track.primaryArtists || 'Unknown Artist';
-  const albumName = track.album?.name || '';
+  const artistName = extractArtists(track);
+  const albumName = track.album?.name || track.album || '';
   const cover = getBestImage(track.image);
   const streamUrl = getBestStreamUrl(track.downloadUrl);
 
