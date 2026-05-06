@@ -33,4 +33,13 @@ export default defineConfig({
       }
     })
   ],
+  server: {
+    proxy: {
+      '/api/saavn': {
+        target: 'https://jiosaavn-api-v4.vercel.app/api',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/saavn/, ''),
+      },
+    },
+  },
 })

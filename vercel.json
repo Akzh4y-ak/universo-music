@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/api/saavn/(.*)", "destination": "https://jiosaavn-api-v4.vercel.app/api/$1" },
     { "source": "/", "destination": "/index.html" },
     { "source": "/artists", "destination": "/index.html" },
     { "source": "/albums", "destination": "/index.html" },
