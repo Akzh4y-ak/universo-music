@@ -2,7 +2,7 @@ import axios from 'axios';
 import { slugifyValue } from '../../utils/musicMeta.js';
 
 // Public JioSaavn API wrapper instance
-const JIOSAAVN_API_ROOT = 'https://saavn-api.vercel.app';
+const JIOSAAVN_API_ROOT = 'https://jiosaavn-api-v4.vercel.app/api';
 const FALLBACK_COVER =
   'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600';
 const playlistSearchCache = new Map();
