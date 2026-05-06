@@ -45,7 +45,6 @@ const GenrePage = lazyRoute('genre', () => import('./pages/GenrePage'));
 const TrackPage = lazyRoute('track', () => import('./pages/TrackPage'));
 const NowPlayingPage = lazyRoute('now-playing', () => import('./pages/NowPlayingPage'));
 const SettingsPage = lazyRoute('settings', () => import('./pages/SettingsPage'));
-const AdminPortal = lazyRoute('admin', () => import('./pages/AdminPortal'));
 const NotFoundPage = lazyRoute('not-found', () => import('./pages/NotFoundPage'));
 
 function App() {
@@ -103,7 +102,6 @@ function App() {
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
-                <Route path="/admin" element={<AdminPortal />} />
               </Routes>
               <Analytics />
               <SpeedInsights />
