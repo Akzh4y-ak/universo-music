@@ -111,37 +111,37 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
             {track.durationLabel}
           </div>
 
-          <div className="flex items-center gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+          <div className="flex items-center gap-0 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100 -mr-1">
             <button
               type="button"
               onClick={() => startRadio(track)}
-              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+              className="rounded-full p-1 text-[#a7a7a7] transition-colors hover:text-white"
               aria-label="Start track radio"
               title="Start radio"
             >
-              <Radio className="h-[18px] w-[18px]" />
+              <Radio className="h-4 w-4" />
             </button>
             <ShareButton
               title={track.title}
               text={`Listen to ${track.title} by ${track.artist} on Univerzo Music.`}
               url={trackUrl}
-              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+              className="rounded-full p-1 text-[#a7a7a7] transition-colors hover:text-white"
             />
             <button
               type="button"
               onClick={() => saveTrackToPlaylist(track)}
-              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+              className="rounded-full p-1 text-[#a7a7a7] transition-colors hover:text-white"
               aria-label={savedToPlaylist ? 'Track saved to playlist' : 'Save track to playlist'}
             >
-              <LibraryBig className={`h-[18px] w-[18px] ${savedToPlaylist ? 'text-brand' : ''}`} />
+              <LibraryBig className={`h-4 w-4 ${savedToPlaylist ? 'text-brand' : ''}`} />
             </button>
             <button
               type="button"
               onClick={() => toggleLike(track)}
-              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+              className="rounded-full p-1 text-[#a7a7a7] transition-colors hover:text-white"
               aria-label={liked ? 'Remove from liked songs' : 'Add to liked songs'}
             >
-              <Heart className={`h-[18px] w-[18px] ${liked ? 'fill-brand text-brand' : ''}`} />
+              <Heart className={`h-4 w-4 ${liked ? 'fill-brand text-brand' : ''}`} />
             </button>
           </div>
         </div>
