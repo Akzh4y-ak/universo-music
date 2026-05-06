@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Play, Heart, LibraryBig } from 'lucide-react';
+import { Play, Heart, LibraryBig, Radio } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePlayer } from '../../context/player';
 import { useMusic } from '../../context/music';
@@ -10,7 +10,7 @@ import ShareButton from './ShareButton';
 const MotionCard = motion.div;
 
 const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
-  const { currentTrack, isPlaying, playTrack, togglePlay } = usePlayer();
+  const { currentTrack, isPlaying, playTrack, togglePlay, startRadio } = usePlayer();
   const { isLiked, toggleLike, isTrackInAnyPlaylist, saveTrackToPlaylist } = useMusic();
 
   const isCurrentTrack = currentTrack?.id === track.id;
@@ -112,6 +112,15 @@ const TrackCard = memo(({ track, queueContext = [], queueIndex = 0 }) => {
           </div>
 
           <div className="flex items-center gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+            <button
+              type="button"
+              onClick={() => startRadio(track)}
+              className="rounded-full p-1.5 text-[#a7a7a7] transition-colors hover:text-white"
+              aria-label="Start track radio"
+              title="Start radio"
+            >
+              <Radio className="h-[18px] w-[18px]" />
+            </button>
             <ShareButton
               title={track.title}
               text={`Listen to ${track.title} by ${track.artist} on Univerzo Music.`}
