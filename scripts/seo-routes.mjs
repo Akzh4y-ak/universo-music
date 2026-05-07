@@ -4,7 +4,7 @@ import { featuredPlaylists } from '../src/data/featuredPlaylists.js';
 import { genres } from '../src/data/genres.js';
 
 export const SITE_NAME = 'Univerzo Music';
-export const SITE_URL = 'https://universo-music.vercel.app';
+export const SITE_URL = 'https://univerzo.in';
 export const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 
 function readSnapshot() {

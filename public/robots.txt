@@ -15,10 +15,10 @@ Crawl-delay: 1
 Request-rate: 30/60
 
 # Sitemaps - Primary and mirrors
-Sitemap: https://universo-music.vercel.app/sitemap.xml
-Sitemap: https://univerzo-music.vercel.app/sitemap-artists.xml
-Sitemap: https://univerzo-music.vercel.app/sitemap-albums.xml
-Sitemap: https://univerzo-music.vercel.app/sitemap-tracks.xml
+Sitemap: https://univerzo.in/sitemap.xml
+Sitemap: https://univerzo.in/sitemap-artists.xml
+Sitemap: https://univerzo.in/sitemap-albums.xml
+Sitemap: https://univerzo.in/sitemap-tracks.xml
 
 # Specific rules for Google
 User-agent: Googlebot

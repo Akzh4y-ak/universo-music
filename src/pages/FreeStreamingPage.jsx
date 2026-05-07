@@ -56,7 +56,7 @@ const FreeStreamingPage = () => {
     description:
       'Listen to millions of songs for free. No sign-up, no ads, no premium required. Stream music online from any device.',
     url: buildCanonicalUrl('/free-streaming'),
-    image: 'https://universo-music.vercel.app/og-image.png',
+    image: 'https://univerzo.in/og-image.png',
     features: [
       'Free forever',
       'No sign-up required',
@@ -83,7 +83,7 @@ const FreeStreamingPage = () => {
         title="Free Music Streaming Online - No Sign-up | Univerzo Music"
         description="Listen to millions of songs for free on Univerzo Music. No sign-up, no ads, no subscriptions. Stream trending music and discover new artists instantly."
         path="/free-streaming"
-        image="https://universo-music.vercel.app/og-image.png"
+        image="https://univerzo.in/og-image.png"
         type="website"
         breadcrumbs={[
           { name: 'Home', path: '/' },

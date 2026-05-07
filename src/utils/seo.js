@@ -1,5 +1,5 @@
 export const SITE_NAME = 'Univerzo Music';
-export const SITE_URL = 'https://universo-music.vercel.app';
+export const SITE_URL = 'https://univerzo.in';
 export const DEFAULT_OG_IMAGE_PATH = '/og-image.png';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}${DEFAULT_OG_IMAGE_PATH}`;
 
