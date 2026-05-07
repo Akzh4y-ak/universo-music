@@ -132,8 +132,8 @@ const PlaylistPage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Seo
-        title={`${title} Playlist | Univerzo Music`}
-        description={description}
+        title={`${title} - playlist by Univerzo Music | Univerzo Music`}
+        description={`Listen to ${title} on Univerzo Music. ${description}`}
         path={playlistPath}
         image={heroCover}
         type="music.playlist"

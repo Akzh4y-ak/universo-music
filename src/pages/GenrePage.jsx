@@ -104,8 +104,8 @@ const GenrePage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Seo
-        title={`${genre.title} Songs | ${SITE_NAME}`}
-        description={`Discover ${genre.title} tracks, fresh catalog picks, and replay-ready listening on Univerzo Music. ${genre.description}`}
+        title={`${genre.title} - playlist by ${SITE_NAME} | ${SITE_NAME}`}
+        description={`Listen to ${genre.title} on ${SITE_NAME}. ${genre.description}`}
         path={`/genre/${genre.id}`}
         image={genre.image}
         type="music.playlist"

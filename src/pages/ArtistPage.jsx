@@ -141,8 +141,8 @@ const ArtistPage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Seo
-        title={`${artistName} | Artist Page on Univerzo Music`}
-        description={artistSummary}
+        title={`${artistName} | Univerzo Music`}
+        description={`Listen to ${artistName} on Univerzo Music. Artist. ${artistSummary ? artistSummary.substring(0, 100) + '...' : ''}`.trim()}
         path={`/artist/${slug}`}
         image={heroImage}
         type="profile"

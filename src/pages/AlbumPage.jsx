@@ -151,8 +151,8 @@ const AlbumPage = () => {
   return (
     <div className="flex flex-col gap-8 pb-8">
       <Seo
-        title={`${albumName || 'Collection'} | ${artistName ? `${artistName} on ` : ''}Univerzo Music`}
-        description={albumSummary}
+        title={`${albumName || 'Collection'} - Album by ${artistName || 'Various Artists'} | Univerzo Music`}
+        description={`Listen to ${albumName || 'Collection'} on Univerzo Music. ${artistName || 'Various Artists'} · Album.`}
         path={`/album/${slug}`}
         image={heroImage}
         type="music.album"

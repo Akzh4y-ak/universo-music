@@ -353,8 +353,8 @@ const baseRoutes = [
 
 const genreRoutes = genres.map((genre) => ({
   path: `/genre/${genre.id}`,
-  title: `${genre.title} Songs | ${SITE_NAME}`,
-  description: `Discover ${genre.title} tracks, fresh catalog picks, and replay-ready listening on Univerzo Music. ${genre.description}`,
+  title: `${genre.title} - playlist by ${SITE_NAME} | ${SITE_NAME}`,
+  description: `Listen to ${genre.title} on ${SITE_NAME}. ${genre.description}`,
   image: genre.image,
   type: 'music.playlist',
   structuredData: [
@@ -387,8 +387,8 @@ const genreRoutes = genres.map((genre) => ({
 
 const playlistRoutes = featuredPlaylists.map((playlist) => ({
   path: `/playlist/${playlist.id}`,
-  title: `${playlist.title} Playlist | ${SITE_NAME}`,
-  description: playlist.description,
+  title: `${playlist.title} - playlist by ${SITE_NAME} | ${SITE_NAME}`,
+  description: `Listen to ${playlist.title} on ${SITE_NAME}. ${playlist.description}`,
   image: playlist.cover,
   type: 'music.playlist',
   structuredData: [
@@ -440,8 +440,8 @@ const artistRoutes = snapshot.artists.map((artist) => {
 
   return {
     path: `/artist/${artist.slug}`,
-    title: `${artist.name} | Artist Page on ${SITE_NAME}`,
-    description: artist.summary,
+    title: `${artist.name} | ${SITE_NAME}`,
+    description: `Listen to ${artist.name} on ${SITE_NAME}. Artist. ${artist.summary ? artist.summary.substring(0, 100) + '...' : ''}`.trim(),
     image: artist.image,
     type: 'profile',
     structuredData: [artistStructuredData(artist)],
@@ -478,8 +478,8 @@ const albumRoutes = snapshot.albums.map((album) => {
 
   return {
     path: `/album/${album.slug}`,
-    title: `${album.title} | ${album.artist ? `${album.artist} on ` : ''}${SITE_NAME}`,
-    description: album.summary,
+    title: `${album.title} - Album by ${album.artist || 'Various Artists'} | ${SITE_NAME}`,
+    description: `Listen to ${album.title} on ${SITE_NAME}. ${album.artist || 'Various Artists'} · Album.`,
     image: album.cover,
     type: 'music.album',
     structuredData: [albumStructuredData(album)],
@@ -511,8 +511,8 @@ const trackRoutes = snapshot.tracks.map((track) => {
 
   return {
     path: `/track/${track.id}`,
-    title: `${track.title} by ${track.artist} | ${SITE_NAME}`,
-    description: track.summary,
+    title: `${track.title} - song by ${track.artist} | ${SITE_NAME}`,
+    description: `Listen to ${track.title} on ${SITE_NAME}. ${track.artist} · Song${track.releaseDate ? ` · ${track.releaseDate.split('-')[0]}` : ''}.`,
     image: track.cover,
     type: 'music.song',
     structuredData: [trackStructuredData(track)],

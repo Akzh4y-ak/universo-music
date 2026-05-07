@@ -158,8 +158,8 @@ const TrackPage = () => {
   return (
     <div className="flex flex-col gap-12 pb-8">
       <Seo
-        title={`${track.title} by ${track.artist} | Univerzo Music`}
-        description={`Listen to ${track.title} by ${track.artist} on Univerzo Music and continue into related tracks from the same catalog.`}
+        title={`${track.title} - song by ${track.artist} | Univerzo Music`}
+        description={`Listen to ${track.title} on Univerzo Music. ${track.artist} · Song${track.releaseDate ? ` · ${track.releaseDate.split('-')[0]}` : ''}.`}
         path={trackPath}
         image={track.cover}
         type="music.song"
