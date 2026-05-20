@@ -8,6 +8,8 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/layout/Layout';
 import LoadingScreen from './components/shared/LoadingScreen';
 
+const shouldUseVercelInsights = import.meta.env.VITE_ENABLE_VERCEL_INSIGHTS === 'true';
+
 function lazyRoute(routeKey, importer) {
   return lazy(async () => {
     const reloadKey = `univerzo-route-retry:${routeKey}`;
@@ -103,8 +105,12 @@ function App() {
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>
-              <Analytics />
-              <SpeedInsights />
+              {shouldUseVercelInsights && (
+                <>
+                  <Analytics />
+                  <SpeedInsights />
+                </>
+              )}
             </Suspense>
           </PlayerProvider>
         </MusicProvider>
